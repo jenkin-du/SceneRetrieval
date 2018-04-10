@@ -103,29 +103,6 @@ if __name__ == '__main__':
     # features = []  # type: # List[Polyline]
     polygons = sv.getShapeVector("polygon.shp")
 
-    # # pass
-    # for poly in polygons:
-    #     polylines = poly.dividingLines  # type: List[Polyline]
-    #     for polyline in polylines:
-    #         for line in polyline.lines:
-    #
-    #             array = arcpy.Array()
-    #             for pnt in line.pointList:
-    #                 point = arcpy.Point()
-    #                 point.X = pnt.x
-    #                 point.Y = pnt.y
-    #
-    #                 array.append(point)
-    #             pointList = arcpy.Polyline(array)
-    #             features.append(pointList)
-    # #
-    # # #
-    # # # features.append(array)
-    # # # for array in features:
-    # # #     for pnt in array:
-    # # #         print(pnt)
-    # # # # 生成要素类
-    # arcpy.CopyFeatures_management(features, outputFeatureClass)
 
 
     pass
