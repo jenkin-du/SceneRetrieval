@@ -20,5 +20,3 @@ class Point(object):
 
     def __str__(self):
         return "x:" + bytes(self.x) + ", y:" + bytes(self.y)
-
-

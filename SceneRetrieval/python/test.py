@@ -43,16 +43,13 @@ if __name__ == '__main__':
     #         print(featureName + "，" + desc.shapeType)
 
     polygons = sv.getShapeVector("polygon.shp")
-    # for poly in polygons:
-    #     print(poly)
-    #     pointList = poly.pointLists
-    #     print("part:")
-    #     for part in pointList:
-    #         print "partLen:",
-    #         print(len(part))
-    #         for pnt in part:
-    #             print("point:")
-    #             print(pnt)
-    #
-    #     print(poly.gravity)
+    for poly in polygons:
+        print(poly)
+        parts = poly.parts
+        for part in parts:
+            for pnt in part:
+                print("point:")
+                print(pnt)
+
+        print(poly.gravity)
     pass
