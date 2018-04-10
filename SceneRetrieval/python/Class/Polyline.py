@@ -8,25 +8,25 @@ from Class.Point import *
 import mathUtil as mu
 
 
-class Line(object):
+class Polyline(object):
     # id
     oid = ""
     # 起止点
     startPoint = Point()
     endPoint = Point()
-    segments = []
+    lines = []
     # 长度
     _length = 0
 
     def getLength(self):
         if self._length == 0:
-            for seg in self.segments:
+            for seg in self.lines:
                 self._length += seg.getLength()
 
         return self._length
 
 
-class LineSegment(object):
+class Line(object):
     # 起止点
     startPoint = Point()
     endPoint = Point()

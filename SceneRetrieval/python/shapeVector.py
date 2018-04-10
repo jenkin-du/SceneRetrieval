@@ -11,7 +11,7 @@ import os
 import arcpy
 from Class.Point import *
 from Class.Polygon import *
-from Class.Line import *
+from Class.Polyline import *
 
 # 定义面状要素被分割的段数
 N = 10
@@ -110,20 +110,20 @@ def getShapeVector(shapeName):
 
         dividingLines = []
         for i in range(N):
-            lineSeg = LineSegment()
-
-            lineSeg.startPoint = Point(lbx + i * widthSeg, lby)
-            lineSeg.endPoint = Point(lbx + i * widthSeg, lby + height)
-
-            lineSeg.pointList.append(lineSeg.startPoint)
-            lineSeg.pointList.append(lineSeg.endPoint)
-
             line = Line()
-            line.segments.append(lineSeg)
 
-            line.oid = poly.oid + "-" + bytes(i)
+            line.startPoint = Point(lbx + i * widthSeg, lby)
+            line.endPoint = Point(lbx + i * widthSeg, lby + height)
 
-            dividingLines.append(line)
+            line.pointList.append(line.startPoint)
+            line.pointList.append(line.endPoint)
+
+            polyline = Polyline()
+            polyline.lines.append(line)
+
+            polyline.oid = poly.oid + "-" + bytes(i)
+
+            dividingLines.append(polyline)
         poly.dividingLines = dividingLines
 
     return polygons

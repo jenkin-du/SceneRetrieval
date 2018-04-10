@@ -14,6 +14,7 @@ import shapeVector as sv
 arcpy.env.workspace = r"D:\毕设\工程\data"
 
 if __name__ == '__main__':
+
     # with arcpy.da.SearchCursor("polygon.shp",["OID@","SHAPE@XY"]) as cursor:
     #     for row in cursor:
     #         ID=row[0]
@@ -46,3 +47,4 @@ if __name__ == '__main__':
     for poly in polygons:
         pass
     pass
+
