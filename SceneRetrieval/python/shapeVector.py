@@ -34,21 +34,31 @@ def rotateCoordinates(pointList, gravityPoint):
 def getShapeVector(shapeName):
     # 获得面状要素的所有坐标
 
-    polygonLists = []
     pointLists = [[]]
+    polygons = []
 
-    with arcpy.da.SearchCursor(shapeName, ["SHAPE@"]) as cursor:
+    with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
         for row in cursor:
-            for part in row[0]:
+            polygon = Polygon()
+            print(row[1].partCount)
+            for part in row[1]:
                 pointList = []
                 for pnt in part:
                     if pnt:
                         pointList.append(pnt)
+                    print "pointList :len= ",
+                    print(len(pointList))
                 pointLists.append(pointList)
-            polygon = Polygon()
-            polygon.pointLists = pointLists
+                print "pointLists :len= ",
+                print(len(pointLists))
 
-    pass
+            polygon.pointLists = pointLists
+            polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
+            polygon.gravity = Point(row[2][0], row[2][1])
+
+            polygons.append(polygon)
+
+    return polygons
 
 
 print(Path)

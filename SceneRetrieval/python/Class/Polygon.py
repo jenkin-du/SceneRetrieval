@@ -4,10 +4,12 @@ from Class.Point import *
 
 
 class Polygon(object):
+    oid = ""  # 全局唯一id
+    pointLists = [[]]  # 面状要素的所有点坐标
+    vector = []  # 形状矢量
+    gravity = Point()  # 重心
 
-    oid = 0
-    pointLists=[[]]
-    vector = []
-    gravity = Point()
+    def __str__(self):
+        return self.oid + ":len:" + bytes(len(self.pointLists))
 
     pass

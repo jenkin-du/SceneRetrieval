@@ -9,8 +9,8 @@ import sys
 import re
 import shapeVector as sv
 
-reload(sys)
-sys.setdefaultencoding('utf8')
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 arcpy.env.workspace = r"D:\毕设\工程\data"
 
 if __name__ == '__main__':
@@ -27,8 +27,6 @@ if __name__ == '__main__':
     # pass
     # 列出windows目录下的所有文件和文件名
 
-    import os
-
     # dir = r"H:\学习\课程\大三\实习\outData"
     # files = os.listdir(unicode(dir, "utf-8"))
     #
@@ -43,3 +41,18 @@ if __name__ == '__main__':
     #     desc = arcpy.Describe(featureName)
     #     if desc.shapeType == "Polygon":
     #         print(featureName + "，" + desc.shapeType)
+
+    polygons = sv.getShapeVector("polygon.shp")
+    # for poly in polygons:
+    #     print(poly)
+    #     pointList = poly.pointLists
+    #     print("part:")
+    #     for part in pointList:
+    #         print "partLen:",
+    #         print(len(part))
+    #         for pnt in part:
+    #             print("point:")
+    #             print(pnt)
+    #
+    #     print(poly.gravity)
+    pass
