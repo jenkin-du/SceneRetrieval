@@ -24,12 +24,6 @@ Path = os.path.dirname(os.path.abspath(os.path.dirname(pwd) + os.path.sep + ".."
 arcpy.env.workspace = Path
 
 
-# 旋转坐标
-def rotateCoordinates(pointList, gravityPoint):
-    for point in pointList:
-        mu.rotateCoord(gravityPoint, point)
-
-
 # 获得面状要素的形状要素
 def getShapeVector(shapeName):
     # 获得面状要素的所有坐标
