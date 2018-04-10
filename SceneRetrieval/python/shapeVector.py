@@ -5,14 +5,11 @@
     该程序获得面状要素的形状矢量
 '''
 
-from Class.Point import *
+
 import mathUtil as mu
 import os
 import arcpy
-from Class.Point import *
-from Class.Point import Point
 from Class.Polygon import *
-from Class.Polygon import Polygon
 from Class.Polyline import *
 
 # 定义面状要素被分割的段数
