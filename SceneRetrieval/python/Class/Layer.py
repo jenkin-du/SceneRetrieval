@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
+from Class.Polygon import *
+
 
 class Layer(object):
-
     layerName = ""
-    polygons = []
+    polygons = []  # type: List[Polygon]
+

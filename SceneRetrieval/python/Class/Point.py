@@ -4,8 +4,8 @@
 
 class Point(object):
     # 成员变量
-    x = 0
-    y = 0
+    x = 0  # type: int
+    y = 0  # type: int
 
     # 构造函数
     def __init__(self, x=0, y=0):

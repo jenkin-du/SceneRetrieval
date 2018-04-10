@@ -14,7 +14,7 @@ class Polyline(object):
     # 起止点
     startPoint = Point()
     endPoint = Point()
-    lines = []
+    lines = []  # type: List[Line]
     # 长度
     _length = 0
 
@@ -33,7 +33,7 @@ class Line(object):
     # 长度
     _length = 0
     # 顶点序列
-    pointList = []
+    pointList = []  # type: List[Point]
 
     def getLength(self):
 
@@ -41,7 +41,7 @@ class Line(object):
             p1 = self.pointList[0]
             for i in range(2, len(self.pointList)):
                 p2 = self.pointList[i]
-                self._length += mu.getPointDistance(p1, p2)
+                self._length += mu.pointDistance(p1, p2)
                 p1 = p2
 
         return self._length

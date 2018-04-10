@@ -10,7 +10,9 @@ import mathUtil as mu
 import os
 import arcpy
 from Class.Point import *
+from Class.Point import Point
 from Class.Polygon import *
+from Class.Polygon import Polygon
 from Class.Polyline import *
 
 # 定义面状要素被分割的段数
@@ -35,19 +37,22 @@ def rotateCoordinates(pointList, gravityPoint):
 def getShapeVector(shapeName):
     # 获得面状要素的所有坐标
 
-    polygons = []
+    polygons = []  # type: List[Polygon]
     # 获取polygon的信息
     with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
         for row in cursor:
 
             polygon = Polygon()
-            parts = []
+            parts = []  # type: List[List[Point]]
 
             for seg in row[1]:
-                part = []
+                part = []  # type: List[Point]
                 for pnt in seg:
+                    point = Point()
                     if pnt:
-                        part.append(pnt)
+                        point.x = pnt.X
+                        point.y = pnt.Y
+                        part.append(point)
 
                 parts.append(part)
 
@@ -88,45 +93,64 @@ def getShapeVector(shapeName):
                 if parts[i][k].y > rt.y:
                     rt.y = parts[i][k].y
 
-        poly.envelope.lbPoint = lb
-        poly.envelope.rtPoint = rt
+        envelope = Envelope()
+        envelope.rtPoint = rt
+        envelope.lbPoint = lb
+        poly.envelope = envelope
 
     # 根据外包矩形生成分割线
     for poly in polygons:
+
         rt = poly.envelope.rtPoint
         lb = poly.envelope.lbPoint
 
-        ltx = lb.x
-        lty = rt.y
-        rtx = rt.x
-        rty = rt.y
-        lbx = lb.x
-        lby = lb.y
-        rbx = rt.x
-        rby = lb.y
-
-        widthSeg = (rtx - ltx) / N
-        height = lty - lby
+        widthSeg = (rt.x - lb.x) / N
+        height = rt.y - lb.y
 
         dividingLines = []
-        for i in range(N):
+        for i in range(N + 1):
             line = Line()
 
-            line.startPoint = Point(lbx + i * widthSeg, lby)
-            line.endPoint = Point(lbx + i * widthSeg, lby + height)
+            line.startPoint = Point(lb.x + i * widthSeg, lb.y)
+            line.endPoint = Point(lb.x + i * widthSeg, lb.y + height)
 
-            line.pointList.append(line.startPoint)
-            line.pointList.append(line.endPoint)
+            pointList = [line.startPoint, line.endPoint]
+            line.pointList = pointList
 
             polyline = Polyline()
-            polyline.lines.append(line)
+            lines = [line]
+            polyline.lines = lines
 
             polyline.oid = poly.oid + "-" + bytes(i)
 
             dividingLines.append(polyline)
         poly.dividingLines = dividingLines
 
+    for poly in polygons:
+        dividingLines = poly.dividingLines
+        for polyline in dividingLines:
+            for line in polyline.lines:
+                for pnt in line.pointList:
+                    mu.rotateCoord(poly.gravity, pnt, 330)
+
+    outputFeatureClass = shapeName.split(".")[0] + "_dl.shp"
+    features = []
+    for poly in polygons:
+        polylines = poly.dividingLines  # type: List[Polyline]
+        for polyline in polylines:
+            for line in polyline.lines:
+
+                array = arcpy.Array()
+                for pnt in line.pointList:
+                    point = arcpy.Point()
+                    point.X = pnt.x
+                    point.Y = pnt.y
+
+                    array.append(point)
+                pointList = arcpy.Polyline(array)
+                features.append(pointList)
+
+     # 生成要素类
+    arcpy.CopyFeatures_management(features, outputFeatureClass)
+
     return polygons
-
-
-print(Path)
