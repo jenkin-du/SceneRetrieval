@@ -13,7 +13,6 @@ def rotateCoord(gp, pt, angle=0):
     pt.y = (pt.x - gp.x) * np.sin(rad) + (pt.y - gp.y) * np.cos(rad) + gp.y
 
 
-
 # 获得多边形的重心，输入为多边形的顺序坐标
 def calculateGravity(pointList):
     # 重心坐标
@@ -49,4 +48,6 @@ def calculateGravity(pointList):
 
     return gravity
 
-
+#计算两个坐标点的距离
+def getPointDistance(p1, p2):
+    return np.sqrt(np.square(p1.x - p2.x) + np.square(p1.y - p2.y))

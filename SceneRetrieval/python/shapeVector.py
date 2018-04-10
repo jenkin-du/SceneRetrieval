@@ -121,6 +121,8 @@ def getShapeVector(shapeName):
             line = Line()
             line.segments.append(lineSeg)
 
+            line.oid = poly.oid + "-" + bytes(i)
+
             dividingLines.append(line)
         poly.dividingLines = dividingLines
 
