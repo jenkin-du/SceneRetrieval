@@ -35,10 +35,12 @@ namespace SceneRetrieval
             this.status = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.axMap = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.testBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.status.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap)).BeginInit();
@@ -72,6 +74,10 @@ namespace SceneRetrieval
             // 
             this.splitContainer1.Panel1.Controls.Add(this.status);
             this.splitContainer1.Panel1.Controls.Add(this.axMap);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.testBtn);
             this.splitContainer1.Size = new System.Drawing.Size(854, 420);
             this.splitContainer1.SplitterDistance = 631;
             this.splitContainer1.TabIndex = 2;
@@ -99,7 +105,19 @@ namespace SceneRetrieval
             this.axMap.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap.OcxState")));
             this.axMap.Size = new System.Drawing.Size(631, 420);
             this.axMap.TabIndex = 0;
+            this.axMap.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMap_OnMouseDown);
+            this.axMap.OnMouseUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseUpEventHandler(this.axMap_OnMouseUp);
             this.axMap.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMap_OnMouseMove);
+            // 
+            // testBtn
+            // 
+            this.testBtn.Location = new System.Drawing.Point(72, 306);
+            this.testBtn.Name = "testBtn";
+            this.testBtn.Size = new System.Drawing.Size(92, 23);
+            this.testBtn.TabIndex = 3;
+            this.testBtn.Text = "≤‚ ‘python\r\n";
+            this.testBtn.UseVisualStyleBackColor = true;
+            this.testBtn.Click += new System.EventHandler(this.testBtn_Click);
             // 
             // mainForm
             // 
@@ -115,6 +133,7 @@ namespace SceneRetrieval
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.status.ResumeLayout(false);
@@ -132,6 +151,7 @@ namespace SceneRetrieval
         private System.Windows.Forms.StatusStrip status;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private ESRI.ArcGIS.Controls.AxMapControl axMap;
+        private System.Windows.Forms.Button testBtn;
     }
 }
 

@@ -6,9 +6,16 @@
 '''
 
 
-import mathUtil as mu
+import sys
+sys.path.append('C:\\Software\\Python27\\ArcGIS10.2\\Lib')
+sys.path.append("C:\\Program Files (x86)\\ArcGIS\\Desktop10.2\\bin")
+sys.path.append("C:\\Program Files (x86)\\ArcGIS\\Desktop10.2\\arcpy")
+sys.path.append("C:\\Program Files (x86)\\ArcGIS\\Desktop10.2\\ArcToolbox\Scripts")
+sys.path.append('C:\\Software\\Python27\\ArcGIS10.2\\Lib\\site-packages\\setuptools-28.8.0-py2.7.egg')
 import os
+# import numpy as np
 import arcpy
+import mathUtil as mu
 from Class.Polygon import *
 from Class.Polyline import *
 
