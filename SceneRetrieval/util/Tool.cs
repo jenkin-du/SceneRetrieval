@@ -161,6 +161,21 @@ namespace SceneRetrieval.util
                 errString += errReader.ReadLine();
             }
             Console.WriteLine(errString);
+            //if (errString != "")
+            //{
+            //    int index = errString.IndexOf("ERROR");
+            //    if (index != -1)
+            //    {
+            //        Console.WriteLine(index);
+            //        String startString = errString.Substring(0, index);
+            //        String endString = errString.Substring(index);
+            //        endString = UTF8ToGBK(endString);
+            //        errString = startString + endString;
+            //    }
+               
+            //}
+            
+            //Console.WriteLine(errString);
         }
 
         public static string GBKToUTF8(string str)

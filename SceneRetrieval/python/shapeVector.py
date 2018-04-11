@@ -14,7 +14,6 @@ from Class.Polyline import *
 #面状矢量的名字
 # shapeName = sys.argv[1]
 shapeName="polygon.shp"
-
 # 定义面状要素被分割的段数
 N = 10
 
@@ -122,6 +121,7 @@ for poly in polygons:
             for pnt in line.pointList:
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
+#生成分割线要素
 outputFeatureClass = shapeName.split(".")[0] + "_dl.shp"
 features = []
 for poly in polygons:

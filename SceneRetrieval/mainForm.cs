@@ -31,7 +31,7 @@ namespace SceneRetrieval
 
             //设置python脚本参数
             shapeVectorPy = new Process();
-            String[] args = { "polygon.shp" };
+            String[] args = { "polygo.shp" };
             Tool.setProcessArgs(shapeVectorPy, "shapeVector.py", args, new EventHandler(shapeVectorPyExited));
             
         }
