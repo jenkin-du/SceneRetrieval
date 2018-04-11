@@ -11,7 +11,7 @@ namespace SceneRetrieval
     {
 
 
-        private Process shapeVectorP;
+        private Process shapeVectorPy;
 
         public mainForm()
         {
@@ -30,22 +30,35 @@ namespace SceneRetrieval
         {
 
             //设置python脚本参数
-            shapeVectorP = new Process();
-            Tool.setProcessArgs(shapeVectorP, "shapeVector_p.py", null, new EventHandler(shapeVectorPyExited));
-            shapeVectorP.Start();
+            shapeVectorPy = new Process();
+            String[] args = { "polygon.shp" };
+            Tool.setProcessArgs(shapeVectorPy, "shapeVector.py", args, new EventHandler(shapeVectorPyExited));
+            
         }
 
         private void shapeVectorPyExited(object sender, EventArgs e)
         {
+            int exitCode = shapeVectorPy.ExitCode;
             testBtn.Text = "测试Python";
             testBtn.Enabled = true;
+            if (exitCode == 0)
+            {
+                MessageBox.Show("测试成功！！");
+            }else 
+            {
+                MessageBox.Show("程序出错！！");
+            }
 
-            MessageBox.Show("测试成功！！");
+
+           
+
+
+            
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
         {
-            statusLabel.Text = string.Format("{0} m, {1} m", e.mapX.ToString("#######.######"), e.mapY.ToString("#######.######"));
+            statusLabel.Text = string.Format("{0} m, {1} m", e.mapX.ToString("#######.###"), e.mapY.ToString("#######.######"));
 
         }
 
@@ -72,7 +85,7 @@ namespace SceneRetrieval
 
         private void testBtn_Click(object sender, EventArgs e)
         {
-            shapeVectorP.Start();
+            shapeVectorPy.Start();
             Console.WriteLine("开始执行！！！！！！！！！！！！！！！");
 
             testBtn.Text = "正在执行";

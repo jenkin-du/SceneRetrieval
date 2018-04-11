@@ -11,7 +11,9 @@ import arcpy
 from Class.Polygon import *
 from Class.Polyline import *
 
-shapeName = sys.argv[1]
+#面状矢量的名字
+# shapeName = sys.argv[1]
+shapeName="polygon.shp"
 
 # 定义面状要素被分割的段数
 N = 10
@@ -44,7 +46,6 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
             parts.append(part)
 
         polygon.parts = parts
-        # polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
         polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
         polygon.gravity = Point(row[2][0], row[2][1])
 
