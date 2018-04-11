@@ -1,30 +1,23 @@
 using ESRI.ArcGIS.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
 using System.IO;
 using System.Diagnostics;
+using SceneRetrieval.util;
 
 namespace SceneRetrieval
 {
     public partial class mainForm : Form
     {
-       
-        //文件的相对路径
-        private String appPath;
-        private String pythonPath;
 
-        private Process pyP_shapeVector;
+
+        private Process shapeVectorP;
 
         public mainForm()
         {
             InitializeComponent();
+
+            Control.CheckForIllegalCrossThreadCalls = false;
 
             init();
 
@@ -35,17 +28,19 @@ namespace SceneRetrieval
         /// </summary>
         private void init()
         {
-            //获得python文件的相对路径
-            DirectoryInfo topDir = Directory.GetParent(Environment.CurrentDirectory);
-            appPath = Directory.GetParent(topDir.ToString()).ToString();
-            pythonPath = appPath + "\\python";
-            pythonPath = pythonPath.Replace("\\", "/");
 
             //设置python脚本参数
-            pyP_shapeVector.StartInfo.FileName = @"C:\Software\Python27\ArcGIS10.2\python.exe";
-            
+            shapeVectorP = new Process();
+            Tool.setProcessArgs(shapeVectorP, "shapeVector_p.py", null, new EventHandler(shapeVectorPyExited));
+            shapeVectorP.Start();
+        }
 
+        private void shapeVectorPyExited(object sender, EventArgs e)
+        {
+            testBtn.Text = "测试Python";
+            testBtn.Enabled = true;
 
+            MessageBox.Show("测试成功！！");
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
@@ -77,16 +72,11 @@ namespace SceneRetrieval
 
         private void testBtn_Click(object sender, EventArgs e)
         {
+            shapeVectorP.Start();
+            Console.WriteLine("开始执行！！！！！！！！！！！！！！！");
 
-            pyP_shapeVector.StartInfo.Arguments = "D:\\毕设\\工程\\SceneRetrieval\\SceneRetrieval\\python\\shapeVector_p.py polygon.shp";
-            pyP_shapeVector.StartInfo.UseShellExecute = false;
-            pyP_shapeVector.StartInfo.RedirectStandardError = true;
-            pyP_shapeVector.StartInfo.RedirectStandardInput = true;
-            pyP_shapeVector.StartInfo.RedirectStandardOutput = true;
-
-            pyP_shapeVector.StartInfo.CreateNoWindow = true;
-
-            pyP_shapeVector.Start();
+            testBtn.Text = "正在执行";
+            testBtn.Enabled = false;
         }
     }
 }

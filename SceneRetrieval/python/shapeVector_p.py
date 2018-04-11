@@ -8,26 +8,26 @@
 import sys
 import os
 import arcpy
-# import mathUtil as mu
 from Class.Polygon import *
 from Class.Polyline import *
 
-shapeName = sys.argv[1]
+shapeName = sys.argv[0]
 
 # 定义面状要素被分割的段数
 N = 10
 
 # 数据文件的路径
-# 当前路径
-pwd = os.getcwd()
-Path = os.path.dirname(os.path.abspath(os.path.dirname(pwd) + os.path.sep + "..")) + "\data\ "
+dataPath = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "\\data\\"
 
+print(dataPath)
 # 设置工作空间
-arcpy.env.workspace = Path
+arcpy.env.workspace = dataPath
+arcpy.env.overwriteOutput = True
 
 polygons = []
 
-with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
+with arcpy.da.SearchCursor("polygon.shp", ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
     for row in cursor:
 
         polygon = Polygon()
@@ -45,7 +45,8 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
             parts.append(part)
 
         polygon.parts = parts
-        polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
+        # polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
+        polygon.oid = "polygon.shp".split(".")[0] + "-" + bytes(row[0])
         polygon.gravity = Point(row[2][0], row[2][1])
 
         polygons.append(polygon)
@@ -121,7 +122,7 @@ for poly in polygons:
             for pnt in line.pointList:
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
-outputFeatureClass = shapeName.split(".")[0] + "_dl.shp"
+outputFeatureClass = "polygon.shp".split(".")[0] + "__dl.shp"
 features = []
 for poly in polygons:
     polylines = poly.dividingLines

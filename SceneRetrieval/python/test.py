@@ -1,13 +1,7 @@
 # -*- coding:utf-8 -*-
 
-import mathUtil as mu
-import numpy as np
-from Class.Point import *
-from Class.Polygon import *
 import arcpy
-import os
-import sys
-import re
+
 import shapeVector as sv
 
 pass
