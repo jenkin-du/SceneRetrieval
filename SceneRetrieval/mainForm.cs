@@ -9,18 +9,18 @@ using System.Windows.Forms;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System.IO;
+using System.Diagnostics;
 
 namespace SceneRetrieval
 {
     public partial class mainForm : Form
     {
-        //设置python的运行环境
-        private ScriptRuntime pyRuntime ;
-        //声明使用的python文件
-        private dynamic shapeVectorPy;
+       
         //文件的相对路径
         private String appPath;
         private String pythonPath;
+
+        private Process pyP_shapeVector;
 
         public mainForm()
         {
@@ -41,13 +41,9 @@ namespace SceneRetrieval
             pythonPath = appPath + "\\python";
             pythonPath = pythonPath.Replace("\\", "/");
 
-            //初始化，并添加参数
-            var options = new Dictionary<string, object>();
-            options["Frames"] = true;
-            options["FullFrames"] = true;
-            pyRuntime = Python.CreateRuntime(options);
-
-            shapeVectorPy = pyRuntime.UseFile(pythonPath + "/shapeVector.py");
+            //设置python脚本参数
+            pyP_shapeVector.StartInfo.FileName = @"C:\Software\Python27\ArcGIS10.2\python.exe";
+            
 
 
         }
@@ -81,7 +77,16 @@ namespace SceneRetrieval
 
         private void testBtn_Click(object sender, EventArgs e)
         {
-            shapeVectorPy.getShapeVector("polygon.shp");
+
+            pyP_shapeVector.StartInfo.Arguments = "D:\\毕设\\工程\\SceneRetrieval\\SceneRetrieval\\python\\shapeVector_p.py polygon.shp";
+            pyP_shapeVector.StartInfo.UseShellExecute = false;
+            pyP_shapeVector.StartInfo.RedirectStandardError = true;
+            pyP_shapeVector.StartInfo.RedirectStandardInput = true;
+            pyP_shapeVector.StartInfo.RedirectStandardOutput = true;
+
+            pyP_shapeVector.StartInfo.CreateNoWindow = true;
+
+            pyP_shapeVector.Start();
         }
     }
 }

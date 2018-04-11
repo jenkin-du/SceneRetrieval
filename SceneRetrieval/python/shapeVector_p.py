@@ -6,14 +6,13 @@
 '''
 
 import sys
-sys.path.append("D:\\毕设\\工程\\SceneRetrieval\\SceneRetrieval\\python")
 import os
 import arcpy
 # import mathUtil as mu
 from Class.Polygon import *
 from Class.Polyline import *
 
-shapeName = arcpy.GetParameterAsText(0)
+shapeName = sys.argv[1]
 
 # 定义面状要素被分割的段数
 N = 10
