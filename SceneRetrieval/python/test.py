@@ -2,9 +2,6 @@
 
 import arcpy
 
-import shapeVector as sv
-
-pass
 # if __name__ == '__main__':
 #
 #     # with arcpy.da.SearchCursor("polygon.shp",["OID@","SHAPE@XY"]) as cursor:
@@ -44,25 +41,25 @@ pass
 # 指定输出数据的路径
 # outputFeatureClass = r"D:\毕设\工程\data\polygon3.shp"
 
-arcpy.env.overwriteOutput = True
-# 指定输出数据的路径
-outputFeatureClass = r"D:\毕设\工程\data\dividingLine.shp"
-
-
-def drawPolygon(coord_list):
-    features = []
-    # 读取坐标串
-    for part in coord_list:
-        array = arcpy.Array()
-        for coordPair in part:
-            point = arcpy.Point()
-            point.X = coordPair[0]
-            point.Y = coordPair[1]
-            array.add(point)
-        line = arcpy.Polyline(array)
-        features.append(line)
-    # 生成要素类
-    arcpy.CopyFeatures_management(features, outputFeatureClass)
+# arcpy.env.overwriteOutput = True
+# # 指定输出数据的路径
+# outputFeatureClass = r"D:\毕设\工程\data\dividingLine.shp"
+#
+#
+# def drawPolygon(coord_list):
+#     features = []
+#     # 读取坐标串
+#     for part in coord_list:
+#         array = arcpy.Array()
+#         for coordPair in part:
+#             point = arcpy.Point()
+#             point.X = coordPair[0]
+#             point.Y = coordPair[1]
+#             array.add(point)
+#         line = arcpy.Polyline(array)
+#         features.append(line)
+#     # 生成要素类
+#     arcpy.CopyFeatures_management(features, outputFeatureClass)
 
 
 if __name__ == '__main__':
@@ -95,7 +92,6 @@ if __name__ == '__main__':
     # drawPolygon(coordList)
 
     # features = []  # type: # List[Polyline]
-    polygons = sv.getShapeVector("polygon.shp")
 
 
 
