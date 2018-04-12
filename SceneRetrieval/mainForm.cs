@@ -2,14 +2,14 @@ using ESRI.ArcGIS.Controls;
 using System;
 using System.Windows.Forms;
 using SceneRetrieval.model;
-using static SceneRetrieval.model.PythonProcess;
+using static SceneRetrieval.model.PyProcess;
 
 namespace SceneRetrieval
 {
     public partial class mainForm : Form
     {
         //设置python进程
-        PythonProcess shapeVectorPy;
+        PyProcess shapeVectorPy;
 
         public mainForm()
         {
@@ -25,7 +25,7 @@ namespace SceneRetrieval
         /// </summary>
         private void init()
         {
-            shapeVectorPy = new PythonProcess("shapeVector.py");
+            shapeVectorPy = new PyProcess("shapeVector.py");
             //设置参数
             PyArgument arg = new PyArgument();
             arg.addArgument("polygon.shp");

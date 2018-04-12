@@ -10,9 +10,9 @@ import arcpy
 from model.Polygon import *
 from model.Polyline import *
 
-#面状矢量的名字
+# 面状矢量的名字
 # shapeName = sys.argv[1]
-shapeName="polygon.shp"
+shapeName = "polygon.shp"
 # 定义面状要素被分割的段数
 N = 10
 
@@ -120,7 +120,7 @@ for poly in polygons:
             for pnt in line.pointList:
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
-#生成分割线要素
+# 生成分割线要素
 
 for poly in polygons:
     outputFeatureClass = poly.oid + "_dl.shp"
@@ -143,6 +143,31 @@ for poly in polygons:
     # 生成要素类
     arcpy.CopyFeatures_management(features, outputFeatureClass)
 
+# 给每条线加上oid
+for poly in polygons:
+
+    polyDLName = poly.oid + "_dl.shp"
+    arcpy.AddField_management(polyDLName, "line_id", "TEXT", "", "", 20)
+    with arcpy.da.UpdateCursor(polyDLName, "line_id") as cursor:
+        i = 0
+        for row in cursor:
+            row[0] = polyDLName.split(".")[0] + "_" +bytes(i)
+            i+=1
+            cursor.updateRow(row)
+
+    #相交
+    polyFeatureName= poly.oid.split("_")[0]+".shp"
+    # polyDLName=polyDLName.split(".")[0]
+
+    inFeatures=[polyFeatureName,polyDLName]
+    outFeature=polyDLName.split(".")[0]+"_in.shp"
+
+    arcpy.Intersect_analysis(inFeatures,outFeature)
+
+#删除中间文件
+for poly in polygons:
+    polyDLName=poly.oid+"_dl.shp"
+    arcpy.Delete_management(polyDLName)
 
 
 print("executed sucessfully!")
