@@ -1,11 +1,10 @@
 # -*- coding:utf-8 -*-
 
-'''
+"""
 
     该程序获得面状要素的形状矢量
-'''
+"""
 
-import sys
 import os
 import arcpy
 from Class.Polygon import *
@@ -141,3 +140,6 @@ for poly in polygons:
 
 # 生成要素类
 arcpy.CopyFeatures_management(features, outputFeatureClass)
+
+
+print("executed sucessfully!")
