@@ -4,14 +4,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 using SceneRetrieval.util;
+using static SceneRetrieval.util.PythonProcess;
 
 namespace SceneRetrieval
 {
     public partial class mainForm : Form
     {
-
-
-        private Process shapeVectorPy;
+        //设置python进程
+        PythonProcess shapeVectorPy;
 
         public mainForm()
         {
@@ -21,6 +21,7 @@ namespace SceneRetrieval
 
             init();
 
+
         }
 
         /// <summary>
@@ -28,37 +29,31 @@ namespace SceneRetrieval
         /// </summary>
         private void init()
         {
-
-            //设置python脚本参数
-            shapeVectorPy = new Process();
             String[] args = { "polygo.shp" };
-            Tool.setProcessArgs(shapeVectorPy, "shapeVector.py", args, new EventHandler(shapeVectorPyExited));
-            
+            shapeVectorPy = new PythonProcess("shapeVector.py", args, new OutputHandler(handleOutput));
+
         }
 
-        private void shapeVectorPyExited(object sender, EventArgs e)
+        private void handleOutput(string output, int exitCode)
         {
-            int exitCode = shapeVectorPy.ExitCode;
             testBtn.Text = "测试Python";
             testBtn.Enabled = true;
             if (exitCode == 0)
             {
                 MessageBox.Show("测试成功！！");
-            }else 
+            }
+            else
             {
                 MessageBox.Show("程序出错！！");
             }
 
+            Console.WriteLine(output);
 
-           
-
-
-            
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
         {
-            statusLabel.Text = string.Format("{0} m, {1} m", e.mapX.ToString("#######.###"), e.mapY.ToString("#######.######"));
+            statusLabel.Text = string.Format("{0} m, {1} m", e.mapX.ToString("#######.###"), e.mapY.ToString("#######.###"));
 
         }
 
@@ -85,7 +80,7 @@ namespace SceneRetrieval
 
         private void testBtn_Click(object sender, EventArgs e)
         {
-            shapeVectorPy.Start();
+            shapeVectorPy.startProcess();
             Console.WriteLine("开始执行！！！！！！！！！！！！！！！");
 
             testBtn.Text = "正在执行";
