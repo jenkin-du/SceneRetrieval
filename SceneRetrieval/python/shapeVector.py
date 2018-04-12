@@ -6,13 +6,15 @@
 """
 
 import os
+import sys
 import arcpy
+
 from model.Polygon import *
 from model.Polyline import *
 
 # 面状矢量的名字
-# shapeName = sys.argv[1]
-shapeName = "polygon.shp"
+shapeName = sys.argv[1]
+# shapeName = "polygon.shp"
 # 定义面状要素被分割的段数
 N = 10
 
@@ -56,6 +58,7 @@ for poly in polygons:
 
     for part in parts:
         for point in part:
+            # TODO 旋转主方向角度
             mu.rotateCoord(gravity, point, 30)
 
 # 计算出polygon的外包矩形
@@ -86,6 +89,7 @@ for poly in polygons:
     poly.envelope = envelope
 
 # 根据外包矩形生成分割线
+
 for poly in polygons:
 
     rt = poly.envelope.rtPoint
@@ -104,31 +108,29 @@ for poly in polygons:
         pointList = [line.startPoint, line.endPoint]
         line.pointList = pointList
 
-        polyline = Polyline()
+        pl = Polyline()
         lines = [line]
-        polyline.lines = lines
+        pl.lines = lines
 
-        polyline.oid = poly.oid + "-" + bytes(i)
+        pl.oid = poly.oid + "-" + bytes(i)
 
-        dividingLines.append(polyline)
-    poly.dividingLines = dividingLines
+        dividingLines.append(pl)
+    poly.dLines = dividingLines
 
-for poly in polygons:
-    dividingLines = poly.dividingLines
-    for polyline in dividingLines:
-        for line in polyline.lines:
+    dividingLines = poly.dLines
+    for pl in dividingLines:
+        for line in pl.lines:
             for pnt in line.pointList:
+                #TODO 旋转回主方向
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
-# 生成分割线要素
-
-for poly in polygons:
+    # 生成分割线要素
     outputFeatureClass = poly.oid + "_dl.shp"
     features = []
 
-    polylines = poly.dividingLines
-    for polyline in polylines:
-        for line in polyline.lines:
+    polylines = poly.dLines
+    for pl in polylines:
+        for line in pl.lines:
 
             array = arcpy.Array()
             for pnt in line.pointList:
@@ -143,31 +145,76 @@ for poly in polygons:
     # 生成要素类
     arcpy.CopyFeatures_management(features, outputFeatureClass)
 
-# 给每条线加上oid
-for poly in polygons:
-
+    # 给每条线加上oid
     polyDLName = poly.oid + "_dl.shp"
-    arcpy.AddField_management(polyDLName, "line_id", "TEXT", "", "", 20)
+    arcpy.AddField_management(polyDLName, "line_id", "TEXT", "", "", 50)
     with arcpy.da.UpdateCursor(polyDLName, "line_id") as cursor:
         i = 0
         for row in cursor:
-            row[0] = polyDLName.split(".")[0] + "_" +bytes(i)
-            i+=1
+            row[0] = polyDLName.split(".")[0] + "_" + bytes(i)
+            i += 1
             cursor.updateRow(row)
 
-    #相交
-    polyFeatureName= poly.oid.split("_")[0]+".shp"
-    # polyDLName=polyDLName.split(".")[0]
+    # 相交
+    polyFeatureName = poly.oid.split("_")[0] + ".shp"
 
-    inFeatures=[polyFeatureName,polyDLName]
-    outFeature=polyDLName.split(".")[0]+"_in.shp"
+    inFeatures = [polyFeatureName, polyDLName]
+    outFeature = polyDLName.split(".")[0] + "_in.shp"
 
-    arcpy.Intersect_analysis(inFeatures,outFeature)
+    arcpy.Intersect_analysis(inFeatures, outFeature)
 
-#删除中间文件
-for poly in polygons:
-    polyDLName=poly.oid+"_dl.shp"
+    # 删除 poly.oid + "_dl.shp"
     arcpy.Delete_management(polyDLName)
 
+    # 分割生成的分割线
+    inFeature = poly.oid + "_dl_in.shp"
+    outFeature = poly.oid + "_dl_sp.shp"
+    arcpy.SplitLine_management(inFeature, outFeature)
+
+    # 删除 poly.oid + "_dl_in.shp"
+    arcpy.Delete_management(inFeature)
+
+    # 将分割线加入到polygon中
+    lines = []  # type: List[Line]
+    with arcpy.da.SearchCursor(outFeature, ["line_id", "SHAPE@"]) as cursor:
+        for row in cursor:
+            line = Line()
+
+            line.oid = row[0]
+            line.startPoint = Point(row[1].firstPoint.X, row[1].firstPoint.Y)
+            line.endPoint = Point(row[1].lastPoint.X, row[1].lastPoint.Y)
+            line.length = row[1].length
+            lines.append(line)
+
+    # # 删除 poly.oid + "_dl_sp.shp"
+    # arcpy.Delete_management(outFeature)
+
+    # 根据line_id将line放在对应的polyline中
+    dLines = []  # type: List[Polyline]
+
+    for i in range(1, N):
+        pl = Polyline()
+        pl.oid = poly.oid + "_" + bytes(i)
+        ls = []  # type: List[Line]
+        for line in lines:
+            lineIndex = int(line.oid.split("_")[-1])
+            if lineIndex == i:
+                ls.append(line)
+        pl.lines = ls
+        dLines.append(pl)
+
+    poly.dLines = dLines
+
+    for dl in dLines:
+        print(dl.oid + ":")
+        lines = dl.lines
+        for line in lines:
+            print("    " + line.oid + " ,"),
+            print("sp: "),
+            print(line.startPoint),
+            print("ep: "),
+            print(line.endPoint)
+
+    #TODO 根据分割线段积分生成形状矢量
 
 print("executed sucessfully!")

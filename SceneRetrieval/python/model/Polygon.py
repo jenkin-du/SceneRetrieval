@@ -17,7 +17,7 @@ class Polygon(object):
 
     envelope = Envelope()  # 外包矩形
 
-    dividingLines = []  # type: List[Polyline] # 分割线列表 每个分割线由两个坐标构成
+    dLines = []  # type: List[Polyline] # 分割线列表 每个分割线由两个坐标构成
 
     def __str__(self):
         return self.oid

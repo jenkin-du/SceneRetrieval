@@ -41,29 +41,29 @@ import arcpy
 # 指定输出数据的路径
 # outputFeatureClass = r"D:\毕设\工程\data\polygon3.shp"
 
-# arcpy.env.overwriteOutput = True
-# # 指定输出数据的路径
-# outputFeatureClass = r"D:\毕设\工程\data\dividingLine.shp"
+arcpy.env.overwriteOutput = True
+# 指定输出数据的路径
+outputFeatureClass = r"D:\毕设\工程\data\box.shp"
 #
 #
-# def drawPolygon(coord_list):
-#     features = []
-#     # 读取坐标串
-#     for part in coord_list:
-#         array = arcpy.Array()
-#         for coordPair in part:
-#             point = arcpy.Point()
-#             point.X = coordPair[0]
-#             point.Y = coordPair[1]
-#             array.add(point)
-#         line = arcpy.Polyline(array)
-#         features.append(line)
-#     # 生成要素类
-#     arcpy.CopyFeatures_management(features, outputFeatureClass)
+def drawPolygon(coord_list):
+    features = []
+    # 读取坐标串
+    for part in coord_list:
+        array = arcpy.Array()
+        for coordPair in part:
+            point = arcpy.Point()
+            point.X = coordPair[0]
+            point.Y = coordPair[1]
+            array.add(point)
+        line = arcpy.Polygon(array)
+        features.append(line)
+    # 生成要素类
+    arcpy.CopyFeatures_management(features, outputFeatureClass)
 
 
 if __name__ == '__main__':
-    # coordList = [[[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]]]
+    # coordList = [[[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]], [[4, 4], [4, 6], [6, 6], [6, 4], [4, 4]]]
     #
     # rad = np.deg2rad(45)
     # print(rad)
@@ -92,6 +92,9 @@ if __name__ == '__main__':
     # drawPolygon(coordList)
 
     # features = []  # type: # List[Polyline]
+
+    string="base_in_sp_1"
+    print(string.split("_")[-1])
 
 
 
