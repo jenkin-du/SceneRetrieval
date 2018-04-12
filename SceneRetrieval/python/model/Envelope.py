@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from Class.Point import *
+from model.Point import *
 
 
 class Envelope(object):

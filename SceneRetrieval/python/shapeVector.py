@@ -7,8 +7,8 @@
 
 import os
 import arcpy
-from Class.Polygon import *
-from Class.Polyline import *
+from model.Polygon import *
+from model.Polyline import *
 
 #面状矢量的名字
 # shapeName = sys.argv[1]
@@ -18,7 +18,7 @@ N = 10
 
 # 数据文件的路径
 dataPath = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "\\data\\"
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/data/"
 
 # 设置工作空间
 arcpy.env.workspace = dataPath
@@ -44,7 +44,7 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
             parts.append(part)
 
         polygon.parts = parts
-        polygon.oid = shapeName.split(".")[0] + "-" + bytes(row[0])
+        polygon.oid = shapeName.split(".")[0] + "_" + bytes(row[0])
         polygon.gravity = Point(row[2][0], row[2][1])
 
         polygons.append(polygon)
@@ -121,9 +121,11 @@ for poly in polygons:
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
 #生成分割线要素
-outputFeatureClass = shapeName.split(".")[0] + "_dl.shp"
-features = []
+
 for poly in polygons:
+    outputFeatureClass = poly.oid + "_dl.shp"
+    features = []
+
     polylines = poly.dividingLines
     for polyline in polylines:
         for line in polyline.lines:
@@ -138,8 +140,9 @@ for poly in polygons:
             pointList = arcpy.Polyline(array)
             features.append(pointList)
 
-# 生成要素类
-arcpy.CopyFeatures_management(features, outputFeatureClass)
+    # 生成要素类
+    arcpy.CopyFeatures_management(features, outputFeatureClass)
+
 
 
 print("executed sucessfully!")

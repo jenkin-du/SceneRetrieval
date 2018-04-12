@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Class.Polygon import *
+from model.Polygon import *
 
 
 class Layer(object):

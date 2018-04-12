@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 
 
-from Class.Point import *
-from Class.Envelope import *
-from Class.Polyline import *
+from model.Point import *
+from model.Envelope import *
+from model.Polyline import *
 
 
 class Polygon(object):

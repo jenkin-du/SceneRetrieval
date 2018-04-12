@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-from Class.Point import *
+from model.Point import *
 
 
 # 将坐标旋转给定的角度,角度单位为°
