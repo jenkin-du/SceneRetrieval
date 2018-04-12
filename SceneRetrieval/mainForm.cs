@@ -1,10 +1,8 @@
 using ESRI.ArcGIS.Controls;
 using System;
 using System.Windows.Forms;
-using System.IO;
-using System.Diagnostics;
-using SceneRetrieval.util;
-using static SceneRetrieval.util.PythonProcess;
+using SceneRetrieval.model;
+using static SceneRetrieval.model.PythonProcess;
 
 namespace SceneRetrieval
 {
@@ -20,8 +18,6 @@ namespace SceneRetrieval
             Control.CheckForIllegalCrossThreadCalls = false;
 
             init();
-
-
         }
 
         /// <summary>
@@ -29,8 +25,13 @@ namespace SceneRetrieval
         /// </summary>
         private void init()
         {
-            String[] args = { "polygo.shp" };
-            shapeVectorPy = new PythonProcess("shapeVector.py", args, new OutputHandler(handleOutput));
+            shapeVectorPy = new PythonProcess("shapeVector.py");
+            //设置参数
+            PyArgument arg = new PyArgument();
+            arg.addArgument("polygon.shp");
+            shapeVectorPy.setArgument(arg);
+            //添加事件响应
+            shapeVectorPy.setOutputHandler(new OutputHandler(handleOutput));
 
         }
 
