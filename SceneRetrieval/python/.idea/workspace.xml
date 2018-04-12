@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1f4b6557-df84-45eb-a5a3-d817491c0e61" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Polygon.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Polygon.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Polyline.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Polyline.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shapeVector.py" beforeDir="false" afterPath="$PROJECT_DIR$/shapeVector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,8 +28,8 @@
       <file leaf-file-name="shapeVector.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/shapeVector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="213" column="32" selection-start-line="213" selection-start-column="32" selection-end-line="213" selection-end-column="32" />
+            <state relative-caret-position="316">
+              <caret line="212" column="26" lean-forward="true" selection-start-line="212" selection-start-column="26" selection-end-line="212" selection-end-column="26" />
               <folding>
                 <element signature="e#53#62#0" expanded="true" />
               </folding>
@@ -343,7 +338,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523535860732</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="code">
+      <created>1523543602484</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1523543602484</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TodoView">
@@ -359,7 +361,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1436012" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1436012" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5014881" side_tool="true" weight="0.45662847" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
@@ -659,8 +661,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shapeVector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="213" column="32" selection-start-line="213" selection-start-column="32" selection-end-line="213" selection-end-column="32" />
+        <state relative-caret-position="316">
+          <caret line="212" column="26" lean-forward="true" selection-start-line="212" selection-start-column="26" selection-end-line="212" selection-end-column="26" />
           <folding>
             <element signature="e#53#62#0" expanded="true" />
           </folding>
