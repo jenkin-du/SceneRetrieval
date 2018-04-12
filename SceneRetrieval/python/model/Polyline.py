@@ -4,7 +4,7 @@
     线段类
 '''
 
-from Class.Point import *
+from model.Point import *
 import mathUtil as mu
 
 
