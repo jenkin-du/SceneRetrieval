@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
+import sympy as sym
 from model.Point import *
 
 
@@ -54,3 +55,22 @@ def calculateGravity(pointList):
 # 计算两个坐标点的距离
 def pointDistance(p1, p2):
     return np.sqrt(np.square(p1.x - p2.x) + np.square(p1.y - p2.y))
+
+
+#计算分割线的积分
+def lineIntegrate(l1, l2):
+    """
+
+    :type l1: Line
+    :type l2: Line
+    """
+
+    len1=l1.length
+    len2=l2.length
+
+    distance=pointDistance(l1.endPoint,l2.startPoint)
+
+
+    m=sym.integrate(1,)
+
+    pass

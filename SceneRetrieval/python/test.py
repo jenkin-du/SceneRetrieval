@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import arcpy
-
+import sympy as sym
 # if __name__ == '__main__':
 #
 #     # with arcpy.da.SearchCursor("polygon.shp",["OID@","SHAPE@XY"]) as cursor:
@@ -93,9 +93,13 @@ if __name__ == '__main__':
 
     # features = []  # type: # List[Polyline]
 
-    string="base_in_sp_1"
-    print(string.split("_")[-1])
+    # string="base_in_sp_1"
+    # print(string.split("_")[-1])
+
+
+    x=sym.symbols("x")
+    s=sym.integrate(2,(x,0,10))
+    print(s)
 
 
 
-    pass
