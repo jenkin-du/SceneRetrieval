@@ -9,9 +9,11 @@ namespace SceneRetrieval
     static class Program
     {
 
-        public static string pythonExePath = @"C:\Software\Python27\ArcGIS10.2\python.exe";
+        public static String pyExePath = @"C:\Software\Python27\ArcGIS10.2\python.exe";
         public static  String programPath;
-        public static String pythonFilePath;
+        public static String pyFilePath;
+        public static String dataPath;
+        public static String tempPath;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -25,8 +27,11 @@ namespace SceneRetrieval
             //获得python文件的相对路径
             DirectoryInfo topDir = Directory.GetParent(Environment.CurrentDirectory);
             programPath = Directory.GetParent(topDir.ToString()).ToString();
-            pythonFilePath = programPath + "\\python\\";
-            pythonFilePath = pythonFilePath.Replace("\\", "/");
+            pyFilePath = programPath + @"\python\";
+            pyFilePath = pyFilePath.Replace(@"\", "/");
+
+            dataPath = Directory.GetParent(Directory.GetParent(programPath).ToString()) +@"\data\";
+            tempPath= Directory.GetParent(Directory.GetParent(programPath).ToString()) + @"\temp\";
 
             Application.Run(new mainForm());
         }

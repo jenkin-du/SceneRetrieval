@@ -20,8 +20,8 @@ namespace SceneRetrieval.model
         public PyProcess(String pyFile)
         {
             mProcess = new Process();
-            mProcess.StartInfo.FileName = Program.pythonExePath;
-            mProcess.StartInfo.Arguments = Program.pythonFilePath + pyFile;
+            mProcess.StartInfo.FileName = Program.pyExePath;
+            mProcess.StartInfo.Arguments = Program.pyFilePath + pyFile;
 
 
             mProcess.StartInfo.UseShellExecute = false;

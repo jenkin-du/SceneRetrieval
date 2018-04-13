@@ -4,13 +4,13 @@
 
     该程序获得面状要素的形状矢量
 """
-
-import os
 import sys
 import arcpy
 
 from model.Polygon import *
 from model.Polyline import *
+import tool.util as util
+import tool.mathUtil as mu
 
 # 面状矢量的名字
 shapeName = sys.argv[1]
@@ -18,14 +18,12 @@ shapeName = sys.argv[1]
 # 定义面状要素被分割的段数
 N = 10
 
-# 数据文件的路径
-dataPath = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) + "/data/"
 
 # 设置工作空间
-arcpy.env.workspace = dataPath
+arcpy.env.workspace = util.dataPath
 arcpy.env.overwriteOutput = True
 
+#多边形列表
 polygons = []
 
 with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
@@ -61,6 +59,8 @@ for poly in polygons:
             # TODO 旋转主方向角度
             mu.rotateCoord(gravity, point, 30)
 
+f = open(util.tempPath + "data.cp", 'w')
+
 # 计算出polygon的外包矩形
 for poly in polygons:
     parts = poly.parts
@@ -88,13 +88,7 @@ for poly in polygons:
     envelope.lbPoint = lb
     poly.envelope = envelope
 
-# 根据外包矩形生成分割线
-
-for poly in polygons:
-
-    rt = poly.envelope.rtPoint
-    lb = poly.envelope.lbPoint
-
+    # 根据外包矩形生成分割线
     widthSeg = (rt.x - lb.x) / N
     height = rt.y - lb.y
 
@@ -121,7 +115,7 @@ for poly in polygons:
     for pl in dividingLines:
         for line in pl.lines:
             for pnt in line.pointList:
-                #TODO 旋转回主方向
+                # TODO 旋转回主方向
                 mu.rotateCoord(poly.gravity, pnt, 330)
 
     # 生成分割线要素
@@ -206,15 +200,18 @@ for poly in polygons:
     poly.dLines = dLines
 
     for dl in dLines:
-        print(dl.oid + ":")
+        f.write(dl.oid + ":")
+        f.write("\n")
         lines = dl.lines
         for line in lines:
-            print("    " + line.oid + " ,"),
-            print("sp: "),
-            print(line.startPoint),
-            print("ep: "),
-            print(line.endPoint)
+            f.write("    " + line.oid + " ,")
+            f.write("sp: ")
+            f.write(line.startPoint.__str__())
+            f.write("ep: "),
+            f.write(line.endPoint.__str__())
+            f.write("\n")
 
-    #TODO 根据分割线段积分生成形状矢量
+f.close()
+    # TODO 根据分割线段积分生成形状矢量
 
 print("executed sucessfully!")

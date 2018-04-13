@@ -5,7 +5,6 @@
 '''
 
 from model.Point import *
-import mathUtil as mu
 
 
 class Polyline(object):

@@ -3,6 +3,8 @@ using System;
 using System.Windows.Forms;
 using SceneRetrieval.model;
 using static SceneRetrieval.model.PyProcess;
+using System.IO;
+using System.Text;
 
 namespace SceneRetrieval
 {
@@ -41,6 +43,13 @@ namespace SceneRetrieval
             testBtn.Enabled = true;
             if (exitCode == 0)
             {
+                StreamReader sr = new StreamReader(Program.tempPath+"data.cp", Encoding.Default);
+                String line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(line.ToString());
+                }
+                sr.Close();
                 MessageBox.Show("≤‚ ‘≥…π¶£°£°");
             }
             else
