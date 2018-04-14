@@ -4,19 +4,17 @@
 
     该程序获得面状要素的形状矢量
 """
-import sys
 import arcpy
-import time
-import sympy as sym
 import numpy as np
 
+import tool.mathUtil as mu
+import tool.util as util
 from model.Polygon import *
 from model.Polyline import *
-import tool.util as util
-import tool.mathUtil as mu
+from model.Programme import *
 
-st = time.time()
-st = int(round(st * 1000))
+pro = Programme()
+pro.start()
 
 # 面状矢量的名字
 # shapeName = sys.argv[1]
@@ -27,6 +25,8 @@ N = 10
 # 设置工作空间
 arcpy.env.workspace = util.dataPath
 arcpy.env.overwriteOutput = True
+
+memoryWorkspace = "in_memory\\"
 
 # 多边形列表
 polygonList = []
@@ -53,7 +53,6 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
         polygon.gravity = Point(row[2][0], row[2][1])
 
         polygonList.append(polygon)
-
 
 for polygon in polygonList:
 
@@ -165,8 +164,7 @@ for polygon in polygonList:
             inFeatures.append(polyline)
 
     # 生成要素类
-    dlOutFeature = polygon.oid + "_dl.shp"
-    dlOutFeature = arcpy.CreateScratchName(dlOutFeature, data_type="Shapefile")
+    dlOutFeature = memoryWorkspace + polygon.oid + "_dl"
     arcpy.CopyFeatures_management(inFeatures, dlOutFeature)
 
     # 生成重心分割要素
@@ -184,8 +182,7 @@ for polygon in polygonList:
     glPolyline = arcpy.Polyline(array)
     glFeatures.append(glPolyline)
 
-    glOutFeature = polygon.gravityLine.oid + ".shp"
-    glOutFeature = arcpy.CreateScratchName(glOutFeature, data_type="Shapefile")
+    glOutFeature = memoryWorkspace + polygon.gravityLine.oid
     arcpy.CopyFeatures_management(glFeatures, glOutFeature)
 
     """
@@ -203,29 +200,25 @@ for polygon in polygonList:
     polyFeatureName = polygon.oid.split("_")[0] + ".shp"
 
     inFeatures = [polyFeatureName, dlOutFeature]
-    inOutFeature = dlOutFeature.split(".")[0] + "_in.shp"
-    inOutFeature = arcpy.CreateScratchName(inOutFeature, data_type="Shapefile")
+    inOutFeature = dlOutFeature + "_in"
     arcpy.Intersect_analysis(inFeatures, inOutFeature)
 
     # 重心分割线相交
     glInFeature = glOutFeature
     glInFeatures = [glInFeature, polyFeatureName]
-    glInOutFeature = polygon.gravityLine.oid + "_in.shp"
-    glInOutFeature = arcpy.CreateScratchName(glInOutFeature, data_type="Shapefile")
+    glInOutFeature = memoryWorkspace + polygon.gravityLine.oid + "_in"
     arcpy.Intersect_analysis(glInFeatures, glInOutFeature)
 
     """
         分割生成的分割线
     """
     inFeature = inOutFeature
-    spOutFeature = polygon.oid + "_dl_sp.shp"
-    spOutFeature = arcpy.CreateScratchName(spOutFeature, data_type="Shapefile")
+    spOutFeature = memoryWorkspace + polygon.oid + "_dl_sp"
     arcpy.SplitLine_management(inFeature, spOutFeature)
 
     # 分割生成的重心分割线
     glInFeature = glInOutFeature
-    glSpOutFeature = polygon.gravityLine.oid + "_sp.shp"
-    glSpOutFeature = arcpy.CreateScratchName(glSpOutFeature, data_type="Shapefile")
+    glSpOutFeature = memoryWorkspace + polygon.gravityLine.oid + "_sp"
 
     arcpy.SplitLine_management(glInFeature, glSpOutFeature)
 
@@ -260,8 +253,6 @@ for polygon in polygonList:
     polygon.dlList = dLines
 
     # 将主分割线加入到polygon中
-    # glSpFeature = polygon.gravityLine.oid + "_sp.shp"
-
     glines = []  # type: List[Line]
     with arcpy.da.SearchCursor(glSpOutFeature, "SHAPE@") as cursor:
         for row in cursor:
@@ -320,11 +311,4 @@ for polygon in polygonList:
     for v in vector:
         print(v)
 
-
-et = time.time()
-et = int(round(et * 1000))
-dt = et - st
-dt = dt / 1000.0
-print("successfully!"),
-print("executed time:"),
-print(bytes(dt))
+pro.stop()

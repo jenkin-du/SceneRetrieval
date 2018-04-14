@@ -5,16 +5,16 @@ import time
 
 class Programme(object):
 
-    startTime = 0
-    stopTime = 0
+    _startTime = 0
+    _stopTime = 0
 
     def start(self):
-        self.startTime = int(round(time.time() * 1000))
+        self._startTime = int(round(time.time() * 1000))
 
     def stop(self):
-        self.stopTime = time.time()
-        self.stopTime = int(round(self.stopTime * 1000))
-        dt = self.stopTime - self.startTime
+        self._stopTime = time.time()
+        self._stopTime = int(round(self._stopTime * 1000))
+        dt = self._stopTime - self._startTime
         dt = dt / 1000.0
         print("successfully!"),
         print("executed time:"),

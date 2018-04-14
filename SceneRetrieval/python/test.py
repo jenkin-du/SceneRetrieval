@@ -82,9 +82,9 @@ if __name__ == '__main__':
     arcpy.CopyFeatures_management(features, outputFeatureClass)
 
     # 复制
-    # arcpy.Copy_management(r"D:\毕设\工程\data\polygon.shp","in_memory/polygon.shp")
+    arcpy.Copy_management(r"polygon.shp","in_memory/polygon")
     # 相交
-    inFeatures = [outputFeatureClass, "polygon.shp"]
+    inFeatures = [outputFeatureClass, "in_memory/polygon"]
     arcpy.Intersect_analysis(inFeatures, "in_memory/bp")
     arcpy.Buffer_analysis("in_memory/bp", "outFeatures", 10)
 
