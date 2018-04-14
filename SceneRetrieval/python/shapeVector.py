@@ -7,7 +7,6 @@
 import arcpy
 import numpy as np
 
-import tool.mathUtil as mu
 import tool.util as util
 from model.Polygon import *
 from model.Polyline import *
@@ -25,11 +24,11 @@ N = 10
 # 设置工作空间
 arcpy.env.workspace = util.dataPath
 arcpy.env.overwriteOutput = True
-
+# 设置没内存工作空间
 memoryWorkspace = "in_memory\\"
 
 # 多边形列表
-polygonList = []
+polygonList = []  # type: List[Polygon]
 
 with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
     for row in cursor:
@@ -54,6 +53,7 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
 
         polygonList.append(polygon)
 
+    del cursor
 for polygon in polygonList:
 
     """
@@ -98,8 +98,8 @@ for polygon in polygonList:
         根据外包矩形生成分割线
     """
     widthSeg = (rt.x - lb.x) / N
-    dividingLines = []
-    for i in range(N + 1):
+    dlList = []
+    for i in range(1, N):
         line = Line()
 
         line.startPoint = Point(lb.x + i * widthSeg, lb.y)
@@ -107,15 +107,15 @@ for polygon in polygonList:
 
         pointList = [line.startPoint, line.endPoint]
         line.pointList = pointList
+        line.oid = polygon.oid + "_dl_" + bytes(i - 1)
 
         pl = Polyline()
+        pl.oid = line.oid
         lines = [line]
         pl.lines = lines
 
-        pl.oid = polygon.oid + "-" + bytes(i)
-
-        dividingLines.append(pl)
-    polygon.dlList = dividingLines
+        dlList.append(pl)
+    polygon.dlList = dlList
 
     #  生成重心分割线
 
@@ -136,23 +136,22 @@ for polygon in polygonList:
     """
          旋转回主方向
     """
-    dividingLines = polygon.dlList
-    for pl in dividingLines:
+    dlList = polygon.dlList
+    for pl in dlList:
         for line in pl.lines:
             for pnt in line.pointList:
                 # TODO 旋转回主方向
                 mu.rotateCoord(gravity, pnt, 330)
 
-    """
-        生成分割线要素
-    """
+"""
+      生成分割线要素
+"""
+inFeatures = []
+for polygon in polygonList:
 
-    inFeatures = []
-
-    polylines = polygon.dlList
-    for pl in polylines:
+    dlList = polygon.dlList
+    for pl in dlList:
         for line in pl.lines:
-
             array = arcpy.Array()
             for pnt in line.pointList:
                 point = arcpy.Point()
@@ -163,131 +162,121 @@ for polygon in polygonList:
             polyline = arcpy.Polyline(array)
             inFeatures.append(polyline)
 
-    # 生成要素类
-    dlOutFeature = memoryWorkspace + polygon.oid + "_dl"
-    arcpy.CopyFeatures_management(inFeatures, dlOutFeature)
+# 创建要素
+dlOutFeature = shapeName.split(".")[0] + "_dl"
+spatial_ref = arcpy.Describe(shapeName).spatialReference
+arcpy.CreateFeatureclass_management("in_memory", dlOutFeature, "POLYLINE", spatial_reference=spatial_ref)
+# 生成要素类
 
-    # 生成重心分割要素
-    glFeatures = []
-    array = arcpy.Array()
-    sp = arcpy.Point()
-    sp.X = gpl.lines[0].startPoint.x
-    sp.Y = gpl.lines[0].startPoint.y
-    array.append(sp)
 
-    ep = arcpy.Point()
-    ep.X = gpl.lines[0].endPoint.x
-    ep.Y = gpl.lines[0].endPoint.y
-    array.append(ep)
-    glPolyline = arcpy.Polyline(array)
-    glFeatures.append(glPolyline)
+"""
+     给每条线加上oid,然后取分割线和原面状要素交集
+"""
+dlOutFeature = memoryWorkspace + dlOutFeature
+arcpy.AddField_management(dlOutFeature, "line_id", "TEXT", "", "", 100)
+with arcpy.da.InsertCursor(dlOutFeature, ["line_id", "SHAPE@"]) as cursor:
+    for polygon in polygonList:
+        dlList = polygon.dlList
+        for pl in dlList:
+            for line in pl.lines:
+                value = [line.oid]
+                array = arcpy.Array()
+                for pnt in line.pointList:
+                    point = arcpy.Point()
+                    point.X = pnt.x
+                    point.Y = pnt.y
 
-    glOutFeature = memoryWorkspace + polygon.gravityLine.oid
-    arcpy.CopyFeatures_management(glFeatures, glOutFeature)
+                    array.append(point)
+                polyline = arcpy.Polyline(array)
+                value.append(polyline)
 
-    """
-         给每条线加上oid,然后取分割线和原面状要素交集
-    """
-    arcpy.AddField_management(dlOutFeature, "line_id", "TEXT", "", "", 100)
-    with arcpy.da.UpdateCursor(dlOutFeature, "line_id") as cursor:
-        i = 0
-        for row in cursor:
-            row[0] = dlOutFeature.split(".")[0] + "_" + bytes(i)
-            i += 1
-            cursor.updateRow(row)
+                cursor.insertRow(value)
 
-    # 相交
-    polyFeatureName = polygon.oid.split("_")[0] + ".shp"
+        # 插入重心线
+        value = [polygon.gravityLine.oid]
 
-    inFeatures = [polyFeatureName, dlOutFeature]
-    inOutFeature = dlOutFeature + "_in"
-    arcpy.Intersect_analysis(inFeatures, inOutFeature)
+        array = arcpy.Array()
+        sp = arcpy.Point()
+        sp.X = polygon.gravityLine.lines[0].startPoint.x
+        sp.Y = polygon.gravityLine.lines[0].startPoint.y
+        array.append(sp)
 
-    # 重心分割线相交
-    glInFeature = glOutFeature
-    glInFeatures = [glInFeature, polyFeatureName]
-    glInOutFeature = memoryWorkspace + polygon.gravityLine.oid + "_in"
-    arcpy.Intersect_analysis(glInFeatures, glInOutFeature)
+        ep = arcpy.Point()
+        ep.X = polygon.gravityLine.lines[0].endPoint.x
+        ep.Y = polygon.gravityLine.lines[0].endPoint.y
+        array.append(ep)
 
-    """
-        分割生成的分割线
-    """
-    inFeature = inOutFeature
-    spOutFeature = memoryWorkspace + polygon.oid + "_dl_sp"
-    arcpy.SplitLine_management(inFeature, spOutFeature)
+        glPolyline = arcpy.Polyline(array)
+        value.append(glPolyline)
 
-    # 分割生成的重心分割线
-    glInFeature = glInOutFeature
-    glSpOutFeature = memoryWorkspace + polygon.gravityLine.oid + "_sp"
+        cursor.insertRow(value)
 
-    arcpy.SplitLine_management(glInFeature, glSpOutFeature)
+    del cursor
 
-    """
-        将分割线加入到polygon中
-    """
-    lines = []  # type: List[Line]
-    with arcpy.da.SearchCursor(spOutFeature, ["line_id", "SHAPE@"]) as cursor:
-        for row in cursor:
-            line = Line()
+'''
+    相交
+'''
+inFeatures = [shapeName, dlOutFeature ]
+inOutFeature = dlOutFeature + "_in"
+arcpy.Intersect_analysis(inFeatures, inOutFeature)
 
-            line.oid = row[0]
-            line.startPoint = Point(row[1].firstPoint.X, row[1].firstPoint.Y)
-            line.endPoint = Point(row[1].lastPoint.X, row[1].lastPoint.Y)
-            line.length = row[1].length
-            lines.append(line)
+'''
+    分割
+'''
+inFeature = inOutFeature
+spOutFeature = inOutFeature + "_sp"
+arcpy.SplitLine_management(inFeature, spOutFeature)
 
-    # 根据line_id将line放在对应的polyline中
-    dLines = []  # type: List[Polyline]
+'''
+    合并
+'''
+lines = []  # type: List[Line]
+with arcpy.da.SearchCursor(spOutFeature, ["line_id", "SHAPE@"]) as cursor:
+    for row in cursor:
+        line = Line()
 
-    for i in range(1, N):
-        pl = Polyline()
-        pl.oid = polygon.oid + "_" + bytes(i)
-        ls = []  # type: List[Line]
-        for line in lines:
-            lineIndex = int(line.oid.split("_")[-1])
-            if lineIndex == i:
-                ls.append(line)
-        pl.lines = ls
-        dLines.append(pl)
+        line.oid = row[0]
+        line.startPoint = Point(row[1].firstPoint.X, row[1].firstPoint.Y)
+        line.endPoint = Point(row[1].lastPoint.X, row[1].lastPoint.Y)
+        line.length = row[1].length
+        lines.append(line)
 
-    polygon.dlList = dLines
+# 清空
+for polygon in polygonList:
+    dlList = polygon.dlList
+    for polyline in dlList:
+        polyline.lines = []
+    polygon.gravityLine.lines = []
+# 根据line_id将line放在对应的polyline中
+for line in lines:
+    oid = line.oid
+    if oid.__contains__("_dl_"):
+        k = int(oid.split("_")[-3])
+        i = int(oid.split("_")[-1])
+        polygonList[k].dlList[i].lines.append(line)
+    elif oid.__contains__("_gl"):
+        t = int(oid.split("_")[-2])
+        polygonList[t].gravityLine.lines.append(line)
 
-    # 将主分割线加入到polygon中
-    glines = []  # type: List[Line]
-    with arcpy.da.SearchCursor(glSpOutFeature, "SHAPE@") as cursor:
-        for row in cursor:
-            line = Line()
+'''
+    删除中间结果
+'''
+arcpy.Delete_management(dlOutFeature + ".shp")
+arcpy.Delete_management(inOutFeature)
+arcpy.Delete_management(spOutFeature)
 
-            line.startPoint = Point(row[0].firstPoint.X, row[0].firstPoint.Y)
-            line.endPoint = Point(row[0].lastPoint.X, row[0].lastPoint.Y)
+"""
+    根据分割线段积分生成形状矢量
+"""
+for polygon in polygonList:
 
-            line.length = row[0].length
-            glines.append(line)
-
-    polygon.gravityLine.lines = glines
-
-    """
-         删除 
-    """
-
-    arcpy.Delete_management(dlOutFeature)
-    arcpy.Delete_management(inOutFeature)
-    arcpy.Delete_management(spOutFeature)
-
-    arcpy.Delete_management(glOutFeature)
-    arcpy.Delete_management(glInOutFeature)
-    arcpy.Delete_management(glSpOutFeature)
-
-    """
-        根据分割线段积分生成形状矢量
-    """
-    vector = [0 for i in range(N - 1)]  # 形状矢量
+    vector = [0 for m in range(N - 1)]  # 形状矢量
     dlList = polygon.dlList
     for i in range(len(dlList)):
         lines = dlList[i].lines  # type Line
         if len(lines) == 1:
             vector[i] = np.square(lines[0].length) / 2.0
-        else:
+        elif len(lines) > 1:
             for k in range(len(lines)):
                 for t in range(k + 1, len(lines)):
                     vector[i] += lines[k].length * lines[t].length
@@ -308,7 +297,9 @@ for polygon in polygonList:
             polygon.vector[i] /= polygon.mainVector
 
     print(polygon.mainVector)
-    for v in vector:
+    print("\n")
+    for v in polygon.vector:
         print(v)
+    print("\n")
 
 pro.stop()

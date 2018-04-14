@@ -17,6 +17,7 @@
         <list>
           <option value="arcpy.da.UpdateCursor" />
           <option value="arcpy.da.SearchCursor" />
+          <option value="arcpy.da.InsertCursor" />
         </list>
       </option>
     </inspection_tool>

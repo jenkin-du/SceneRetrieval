@@ -64,28 +64,40 @@ if __name__ == '__main__':
     arcpy.env.workspace = util.dataPath
     arcpy.env.overwriteOutput = True
 
-    outputFeatureClass = "in_memory/box"
-    # # outputFeatureClass=arcpy.CreateScratchName(outputFeatureClass,data_type="Shapefile",workspace="in_memory")
-    coordList = [[[0, 0], [0, 100], [100, 100], [100, 0], [0, 0]], [[40, 40], [40, 60], [60, 60], [60, 40], [40, 40]]]
-    features = []
-    # 读取坐标串
-    for part in coordList:
-        array = arcpy.Array()
-        for coordPair in part:
-            point = arcpy.Point()
-            point.X = coordPair[0]
-            point.Y = coordPair[1]
-            array.add(point)
-        line = arcpy.Polygon(array)
-        features.append(line)
-    # 生成要素类
-    arcpy.CopyFeatures_management(features, outputFeatureClass)
-
-    # 复制
-    arcpy.Copy_management(r"polygon.shp","in_memory/polygon")
-    # 相交
-    inFeatures = [outputFeatureClass, "in_memory/polygon"]
-    arcpy.Intersect_analysis(inFeatures, "in_memory/bp")
-    arcpy.Buffer_analysis("in_memory/bp", "outFeatures", 10)
-
-    program.stop()
+    # outputFeatureClass = "in_memory/box"
+    # # # outputFeatureClass=arcpy.CreateScratchName(outputFeatureClass,data_type="Shapefile",workspace="in_memory")
+    # coordList = [[[0, 0], [0, 100], [100, 100], [100, 0], [0, 0]], [[40, 40], [40, 60], [60, 60], [60, 40], [40, 40]]]
+    # features = []
+    # # 读取坐标串
+    # for part in coordList:
+    #     array = arcpy.Array()
+    #     for coordPair in part:
+    #         point = arcpy.Point()
+    #         point.X = coordPair[0]
+    #         point.Y = coordPair[1]
+    #         array.add(point)
+    #     line = arcpy.Polygon(array)
+    #     features.append(line)
+    # # 生成要素类
+    # arcpy.CopyFeatures_management(features, outputFeatureClass)
+    #
+    # # 复制
+    # arcpy.Copy_management(r"polygon.shp","in_memory/polygon")
+    # # 相交
+    # inFeatures = [outputFeatureClass, "in_memory/polygon"]
+    # arcpy.Intersect_analysis(inFeatures, "in_memory/bp")
+    # arcpy.Buffer_analysis("in_memory/bp", "outFeatures", 10)
+    #
+    # program.stop()
+    array = arcpy.Array([arcpy.Point(459111.668136828221, 5010433.128536828221), arcpy.Point(472516.381836828221, 5001431.080836828221),
+                         arcpy.Point(477710.818536828221, 4986587.106336828221)])
+    # Create a polyline geometry
+    # array = arcpy.Array([arcpy.Point(459111.6681, 5010433.1285), arcpy.Point(472516.3818, 5001431.0808),
+    #                      arcpy.Point(477710.8185, 4986587.1063)])
+    polyline = arcpy.Polyline(array)
+    # Open an InsertCursor and insert the new geometry
+    cursor = arcpy.da.InsertCursor('polyline.shp', ['NAME', 'SHAPE@'])
+    value=["Anderson"]
+    value.append(polyline)
+    cursor.insertRow(value)
+# Delete cursor object del cursor
