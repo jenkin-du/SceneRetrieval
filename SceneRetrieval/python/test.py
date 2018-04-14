@@ -1,7 +1,14 @@
 # -*- coding:utf-8 -*-
 
 import arcpy
+from model.Polygon import *
+
+from model.Programme import *
+
+program = Programme()
+program.start()
 import sympy as sym
+
 # if __name__ == '__main__':
 #
 #     # with arcpy.da.SearchCursor("polygon.shp",["OID@","SHAPE@XY"]) as cursor:
@@ -40,16 +47,29 @@ import sympy as sym
 # arcpy.env.overwriteOutput = True
 # 指定输出数据的路径
 # outputFeatureClass = r"D:\毕设\工程\data\polygon3.shp"
+from tool import util
 
 arcpy.env.overwriteOutput = True
 # 指定输出数据的路径
-outputFeatureClass = r"D:\毕设\工程\data\box.shp"
+# outputFeatureClass = r"D:\毕设\工程\data\box.shp"
 #
 #
-def drawPolygon(coord_list):
+
+
+if __name__ == '__main__':
+    # coordList = [[[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]], [[4, 4], [4, 6], [6, 6], [6, 4], [4, 4]]]
+    #
+
+    # 设置工作空间
+    arcpy.env.workspace = util.dataPath
+    arcpy.env.overwriteOutput = True
+
+    outputFeatureClass = "in_memory/box"
+    # # outputFeatureClass=arcpy.CreateScratchName(outputFeatureClass,data_type="Shapefile",workspace="in_memory")
+    coordList = [[[0, 0], [0, 100], [100, 100], [100, 0], [0, 0]], [[40, 40], [40, 60], [60, 60], [60, 40], [40, 40]]]
     features = []
     # 读取坐标串
-    for part in coord_list:
+    for part in coordList:
         array = arcpy.Array()
         for coordPair in part:
             point = arcpy.Point()
@@ -61,45 +81,11 @@ def drawPolygon(coord_list):
     # 生成要素类
     arcpy.CopyFeatures_management(features, outputFeatureClass)
 
+    # 复制
+    # arcpy.Copy_management(r"D:\毕设\工程\data\polygon.shp","in_memory/polygon.shp")
+    # 相交
+    inFeatures = [outputFeatureClass, "polygon.shp"]
+    arcpy.Intersect_analysis(inFeatures, "in_memory/bp")
+    arcpy.Buffer_analysis("in_memory/bp", "outFeatures", 10)
 
-if __name__ == '__main__':
-    # coordList = [[[0, 0], [0, 10], [10, 10], [10, 0], [0, 0]], [[4, 4], [4, 6], [6, 6], [6, 4], [4, 4]]]
-    #
-    # rad = np.deg2rad(45)
-    # print(rad)
-    # print(np.cos(rad))
-    # print(np.sin(rad))
-    # gp = [0, 0]
-    # for part in coordList:
-    #     for pnt in part:
-    #         print("x: " + bytes(pnt[0]) + ", y: " + bytes(pnt[1]))
-    #         pnt[0] = (pnt[0] - gp[0]) * np.cos(rad) - (pnt[1] - gp[1]) * np.sin(rad) + gp[0]
-    #         pnt[1] = (pnt[0] - gp[0]) * np.sin(rad) + (pnt[1] - gp[1]) * np.cos(rad) + gp[1]
-    #         print("x: " + bytes(pnt[0]) + ", y: " + bytes(pnt[1]))
-
-    # for part in coordList:
-    #     for pnt in part:
-    #         print("x: " + bytes(pnt[0]) + ", y: " + bytes(pnt[1]))
-    #         pnt[0] = pnt[0] * np.cos(rad) - pnt[1] * np.sin(rad)
-    #         pnt[1] = pnt[0] * np.sin(rad) + pnt[1] * np.cos(rad)
-    #         print("x: " + bytes(pnt[0]) + ", y: " + bytes(pnt[1]))
-    # rad = np.deg2rad(330)
-    # gp = [5, 5]
-    # for part in coordList:
-    #     for pnt in part:
-    #         pnt[0] = (pnt[0] - gp[0]) * np.cos(rad) - (pnt[1] - gp[1]) * np.sin(rad) + gp[0]
-    #         pnt[1] = (pnt[0] - gp[0]) * np.sin(rad) + (pnt[1] - gp[1]) * np.cos(rad) + gp[1]
-    # drawPolygon(coordList)
-
-    # features = []  # type: # List[Polyline]
-
-    # string="base_in_sp_1"
-    # print(string.split("_")[-1])
-
-
-    x=sym.symbols("x")
-    s=sym.integrate(2,(x,0,10))
-    print(s)
-
-
-
+    program.stop()

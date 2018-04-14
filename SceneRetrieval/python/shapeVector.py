@@ -54,7 +54,6 @@ with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@", "SHAPE@XY"]) as cursor:
 
         polygonList.append(polygon)
 
-# f = open(util.tempPath + "data.cp", 'w')
 
 for polygon in polygonList:
 
@@ -119,9 +118,8 @@ for polygon in polygonList:
         dividingLines.append(pl)
     polygon.dlList = dividingLines
 
-    """
-        生成重心分割线
-    """
+    #  生成重心分割线
+
     gl = Line()
     gl.startPoint = Point(gravity.x, lb.y)
     gl.endPoint = Point(gravity.x, rt.y)
@@ -149,8 +147,8 @@ for polygon in polygonList:
     """
         生成分割线要素
     """
-    outputFeatureClass = polygon.oid + "_dl.shp"
-    features = []
+
+    inFeatures = []
 
     polylines = polygon.dlList
     for pl in polylines:
@@ -164,13 +162,14 @@ for polygon in polygonList:
 
                 array.append(point)
             polyline = arcpy.Polyline(array)
-            features.append(polyline)
+            inFeatures.append(polyline)
 
     # 生成要素类
-    arcpy.CopyFeatures_management(features, outputFeatureClass)
+    dlOutFeature = polygon.oid + "_dl.shp"
+    dlOutFeature = arcpy.CreateScratchName(dlOutFeature, data_type="Shapefile")
+    arcpy.CopyFeatures_management(inFeatures, dlOutFeature)
 
     # 生成重心分割要素
-    glOutFeature = polygon.gravityLine.oid + ".shp"
     glFeatures = []
     array = arcpy.Array()
     sp = arcpy.Point()
@@ -184,60 +183,57 @@ for polygon in polygonList:
     array.append(ep)
     glPolyline = arcpy.Polyline(array)
     glFeatures.append(glPolyline)
+
+    glOutFeature = polygon.gravityLine.oid + ".shp"
+    glOutFeature = arcpy.CreateScratchName(glOutFeature, data_type="Shapefile")
     arcpy.CopyFeatures_management(glFeatures, glOutFeature)
 
     """
          给每条线加上oid,然后取分割线和原面状要素交集
     """
-    polyDLName = polygon.oid + "_dl.shp"
-    arcpy.AddField_management(polyDLName, "line_id", "TEXT", "", "", 50)
-    with arcpy.da.UpdateCursor(polyDLName, "line_id") as cursor:
+    arcpy.AddField_management(dlOutFeature, "line_id", "TEXT", "", "", 100)
+    with arcpy.da.UpdateCursor(dlOutFeature, "line_id") as cursor:
         i = 0
         for row in cursor:
-            row[0] = polyDLName.split(".")[0] + "_" + bytes(i)
+            row[0] = dlOutFeature.split(".")[0] + "_" + bytes(i)
             i += 1
             cursor.updateRow(row)
 
     # 相交
     polyFeatureName = polygon.oid.split("_")[0] + ".shp"
 
-    inFeatures = [polyFeatureName, polyDLName]
-    outFeature = polyDLName.split(".")[0] + "_in.shp"
-    arcpy.Intersect_analysis(inFeatures, outFeature)
+    inFeatures = [polyFeatureName, dlOutFeature]
+    inOutFeature = dlOutFeature.split(".")[0] + "_in.shp"
+    inOutFeature = arcpy.CreateScratchName(inOutFeature, data_type="Shapefile")
+    arcpy.Intersect_analysis(inFeatures, inOutFeature)
 
     # 重心分割线相交
-    glInFeature = polygon.gravityLine.oid + ".shp"
-    glInFeatures=[glInFeature,polyFeatureName]
-    outFeature = polygon.gravityLine.oid + "_in.shp"
-    arcpy.Intersect_analysis(glInFeatures, outFeature)
-
-    # 删除 poly.oid + "_dl.shp"
-    arcpy.Delete_management(polyDLName)
-    arcpy.Delete_management(glInFeature)
+    glInFeature = glOutFeature
+    glInFeatures = [glInFeature, polyFeatureName]
+    glInOutFeature = polygon.gravityLine.oid + "_in.shp"
+    glInOutFeature = arcpy.CreateScratchName(glInOutFeature, data_type="Shapefile")
+    arcpy.Intersect_analysis(glInFeatures, glInOutFeature)
 
     """
         分割生成的分割线
     """
-    inFeature = polygon.oid + "_dl_in.shp"
-    outFeature = polygon.oid + "_dl_sp.shp"
-    arcpy.SplitLine_management(inFeature, outFeature)
-
-    # 删除 poly.oid + "_dl_in.shp"
-    arcpy.Delete_management(inFeature)
+    inFeature = inOutFeature
+    spOutFeature = polygon.oid + "_dl_sp.shp"
+    spOutFeature = arcpy.CreateScratchName(spOutFeature, data_type="Shapefile")
+    arcpy.SplitLine_management(inFeature, spOutFeature)
 
     # 分割生成的重心分割线
-    glInFeature = polygon.gravityLine.oid + "_in.shp"
-    glOutFeature = polygon.gravityLine.oid + "_sp.shp"
-    arcpy.SplitLine_management(glInFeature, glOutFeature)
+    glInFeature = glInOutFeature
+    glSpOutFeature = polygon.gravityLine.oid + "_sp.shp"
+    glSpOutFeature = arcpy.CreateScratchName(glSpOutFeature, data_type="Shapefile")
 
-    # 删除 poly.gravityLine.oid + "_in.shp"
-    arcpy.Delete_management(glInFeature)
+    arcpy.SplitLine_management(glInFeature, glSpOutFeature)
 
     """
         将分割线加入到polygon中
     """
     lines = []  # type: List[Line]
-    with arcpy.da.SearchCursor(outFeature, ["line_id", "SHAPE@"]) as cursor:
+    with arcpy.da.SearchCursor(spOutFeature, ["line_id", "SHAPE@"]) as cursor:
         for row in cursor:
             line = Line()
 
@@ -264,9 +260,10 @@ for polygon in polygonList:
     polygon.dlList = dLines
 
     # 将主分割线加入到polygon中
-    glspFeature = polygon.gravityLine.oid + "_sp.shp"
+    # glSpFeature = polygon.gravityLine.oid + "_sp.shp"
+
     glines = []  # type: List[Line]
-    with arcpy.da.SearchCursor(glspFeature, "SHAPE@") as cursor:
+    with arcpy.da.SearchCursor(glSpOutFeature, "SHAPE@") as cursor:
         for row in cursor:
             line = Line()
 
@@ -278,11 +275,17 @@ for polygon in polygonList:
 
     polygon.gravityLine.lines = glines
 
+    """
+         删除 
+    """
 
-    # 删除 poly.oid + "_dl_sp.shp"
-    arcpy.Delete_management(outFeature)
-    arcpy.Delete_management(glspFeature)
+    arcpy.Delete_management(dlOutFeature)
+    arcpy.Delete_management(inOutFeature)
+    arcpy.Delete_management(spOutFeature)
 
+    arcpy.Delete_management(glOutFeature)
+    arcpy.Delete_management(glInOutFeature)
+    arcpy.Delete_management(glSpOutFeature)
 
     """
         根据分割线段积分生成形状矢量
@@ -311,14 +314,17 @@ for polygon in polygonList:
     # 将形状矢量平均
     if polygon.mainVector != 0:
         for i in range(len(vector)):
-             polygon.vector[i] /= polygon.mainVector
+            polygon.vector[i] /= polygon.mainVector
 
-print("executed sucessfully!")
+    print(polygon.mainVector)
+    for v in vector:
+        print(v)
+
 
 et = time.time()
 et = int(round(et * 1000))
 dt = et - st
 dt = dt / 1000.0
-
+print("successfully!"),
 print("executed time:"),
 print(bytes(dt))
