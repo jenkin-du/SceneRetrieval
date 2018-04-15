@@ -3,6 +3,5 @@ from model.Polygon import *
 
 
 class Layer(object):
-    layerName = ""
+    name = ""
     polygons = []  # type: List[Polygon]
-
