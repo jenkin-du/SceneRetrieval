@@ -15,7 +15,13 @@ class Polygon(object):
 
     orient = 0  # 方向 方位角（0，180）
 
-    envelope = Envelope()  #外包矩形
+    envelope = Envelope()  # 外包矩形
+
+    gravity = Point()  # 重心
+
+    diff = -1  # 形状矢量的平均差异
+
+    area = 0  # 面积
 
     def __str__(self):
         return self.oid

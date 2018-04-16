@@ -5,7 +5,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SceneRetrieval.py" beforeDir="false" afterPath="$PROJECT_DIR$/SceneRetrieval.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ShapeVector.py" beforeDir="false" afterPath="$PROJECT_DIR$/ShapeVector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Constant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/Polygon.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/Polygon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tool/MathUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/tool/MathUtil.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,11 +18,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SceneRetrieval.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SceneRetrieval.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SceneRetrieval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
+            <state relative-caret-position="297">
+              <caret line="52" column="56" lean-forward="true" selection-start-line="52" selection-start-column="56" selection-end-line="52" selection-end-column="56" />
               <folding>
                 <element signature="e#43#52#0" expanded="true" />
               </folding>
@@ -31,8 +33,8 @@
       <file leaf-file-name="Constant.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model/Constant.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            <state relative-caret-position="399">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="e#24#33#0" expanded="true" />
               </folding>
@@ -40,34 +42,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShapeVector.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ShapeVector.py">
+      <file leaf-file-name="MathUtil.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tool/MathUtil.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="258" lean-forward="true" selection-start-line="258" selection-end-line="258" />
+            <state relative-caret-position="430">
+              <caret line="225" column="31" lean-forward="true" selection-start-line="225" selection-start-column="31" selection-end-line="225" selection-end-column="31" />
               <folding>
-                <element signature="e#52#64#0" expanded="true" />
+                <element signature="e#24#42#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Polygon.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/Polygon.py">
+      <file leaf-file-name="ShapeVector.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ShapeVector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MathUtil.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tool/MathUtil.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-274">
-              <caret line="65" column="7" lean-forward="true" selection-start-line="65" selection-start-column="7" selection-end-line="65" selection-end-column="7" />
+            <state relative-caret-position="77">
+              <caret line="21" column="9" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
               <folding>
-                <element signature="e#24#42#0" expanded="true" />
+                <element signature="e#52#64#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -106,14 +99,19 @@
       <find>dlList</find>
       <find>polygon</find>
       <find>mu</find>
+      <find>s_lb</find>
+      <find>s_parts</find>
       <find>print</find>
+      <find>sourcePolygon.partList</find>
+      <find>sourcePart</find>
+      <find>retrievalPolygon.partList</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/../.." value="master" />
+        <entry key="$PROJECT_DIR$/../.." value="jenkin" />
       </map>
     </option>
   </component>
@@ -142,12 +140,12 @@
         <option value="$PROJECT_DIR$/SceneRetrievial.py" />
         <option value="$PROJECT_DIR$/tool/mathUtil.py" />
         <option value="$PROJECT_DIR$/shape.py" />
-        <option value="$PROJECT_DIR$/model/Constant.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/tool/MathUtil.py" />
-        <option value="$PROJECT_DIR$/SceneRetrieval.py" />
         <option value="$PROJECT_DIR$/model/Polygon.py" />
         <option value="$PROJECT_DIR$/ShapeVector.py" />
+        <option value="$PROJECT_DIR$/model/Constant.py" />
+        <option value="$PROJECT_DIR$/tool/MathUtil.py" />
+        <option value="$PROJECT_DIR$/SceneRetrieval.py" />
       </list>
     </option>
   </component>
@@ -165,7 +163,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -187,6 +184,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -273,8 +271,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.SceneRetrieval" />
+        <item itemvalue="Python.ShapeVector" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.ShapeVector" />
+        <item itemvalue="Python.SceneRetrieval" />
       </list>
     </recent_temporary>
   </component>
@@ -464,7 +464,14 @@
       <option name="project" value="LOCAL" />
       <updated>1523844852887</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="code">
+      <created>1523860381764</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1523860381764</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView">
@@ -480,23 +487,23 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1436012" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13913691" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50223213" side_tool="true" weight="0.3878887" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3289689" />
-      <window_info anchor="bottom" id="Python Console" order="7" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49776787" weight="0.32405892" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3289689" />
+      <window_info anchor="bottom" id="Python Console" order="9" weight="0.3289689" />
+      <window_info anchor="bottom" id="Run" order="5" sideWeight="0.49776787" weight="0.59738135" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.5653595" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.5653595" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39934534" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.39934534" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Messages" order="7" />
+      <window_info anchor="bottom" id="Messages" order="11" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
     </layout>
   </component>
@@ -510,9 +517,9 @@
     <MESSAGE value="今天实现了获取面状矢量的形状矢量" />
     <MESSAGE value="优化了一下代码，运行时间减半" />
     <MESSAGE value="优化了一下代码，时间减少三分之一" />
-    <MESSAGE value="code" />
     <MESSAGE value="通过外包矩形获取主方向，检索正确率提升" />
-    <option name="LAST_COMMIT_MESSAGE" value="通过外包矩形获取主方向，检索正确率提升" />
+    <MESSAGE value="code" />
+    <option name="LAST_COMMIT_MESSAGE" value="code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -534,9 +541,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1900">
           <caret line="100" column="21" selection-start-line="100" selection-start-column="21" selection-end-line="100" selection-end-column="21" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -564,9 +568,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1919">
           <caret line="101" selection-start-line="101" selection-end-line="101" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -584,9 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1919">
           <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -604,9 +602,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="418">
           <caret line="22" column="21" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -787,13 +782,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/Point.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="21" column="60" lean-forward="true" selection-start-line="21" selection-start-column="60" selection-end-line="21" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files (x86)/ArcGIS/Desktop10.2/arcpy/arcpy/analysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="237">
@@ -846,16 +834,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/Polyline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="45" column="33" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="33" />
-          <folding>
-            <element signature="e#41#66#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/Layer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
@@ -875,55 +853,66 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="183">
           <caret line="20" column="59" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/Polyline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="45" column="34" selection-start-line="45" selection-start-column="34" selection-end-line="45" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/Point.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/Polygon.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/Constant.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        <state relative-caret-position="399">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SceneRetrieval.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
-          <folding>
-            <element signature="e#43#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tool/MathUtil.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-274">
-          <caret line="65" column="7" lean-forward="true" selection-start-line="65" selection-start-column="7" selection-end-line="65" selection-end-column="7" />
+        <state relative-caret-position="430">
+          <caret line="225" column="31" lean-forward="true" selection-start-line="225" selection-start-column="31" selection-end-line="225" selection-end-column="31" />
           <folding>
             <element signature="e#24#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/Polygon.py">
+    <entry file="file://$PROJECT_DIR$/ShapeVector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
+        <state relative-caret-position="77">
+          <caret line="21" column="9" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
+          <folding>
+            <element signature="e#52#64#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ShapeVector.py">
+    <entry file="file://$PROJECT_DIR$/SceneRetrieval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="258" lean-forward="true" selection-start-line="258" selection-end-line="258" />
+        <state relative-caret-position="297">
+          <caret line="52" column="56" lean-forward="true" selection-start-line="52" selection-start-column="56" selection-end-line="52" selection-end-column="56" />
           <folding>
-            <element signature="e#52#64#0" expanded="true" />
+            <element signature="e#43#52#0" expanded="true" />
           </folding>
         </state>
       </provider>

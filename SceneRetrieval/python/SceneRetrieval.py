@@ -25,10 +25,10 @@ if __name__ == '__main__':
     # 匹配的结果列表
     matchedPolygonList = []  # type:list[list[Polygon]] #已匹配的矩形
     # 搜索数据目录下的矢量数据
-    dataPath = dataPath + "test\\"
-    files = os.listdir(dataPath )
+    workPath = dataPath
+    files = os.listdir(workPath)
     for f in files:
-        fp = os.path.join(dataPath , f)
+        fp = os.path.join(workPath, f)
 
         layer = Layer
         layer.name = f
@@ -36,18 +36,26 @@ if __name__ == '__main__':
         if os.path.isfile(fp) and len(f.split(".")) == 2 and f.split(".")[1] == "shp":
             desc = arcpy.Describe(fp)
             if desc.shapeType == 'Polygon':
-                polygons = SV.getVector(dataPath, f)  # type: list[Polygon]
+                polygons = SV.getVector(workPath, f)  # type: list[Polygon]
                 matchedPolygon = []
                 for sp in sceneLayer.polygons:
                     matchedPolygon.append(sp)
                     for rp in polygons:
-                        # 计算匹配度
-                        md = mu.matchVector(sp.vector, rp.vector)
-                        if md >=0.7:
-                            matchedPolygon.append(rp)
-                        print("sp :" + sp.oid + " "),
-                        print("rp :" + rp.oid + " "),
-                        print("   md:" + str(md))
+                        # if rp.diff > 0.1:
+                        #     # 计算匹配度
+                        #     md = mu.matchVector(sp.vector, rp.vector)
+                        #     if md >= precision:
+                        #         matchedPolygon.append(rp)
+                        #         print("sp :" + sp.oid + " "),
+                        #         print("rp :" + rp.oid + " "),
+                        #         print("   md:" + str(md))
+                        # elif rp.diff < 0.1 and sp.diff < 0.1:
+                            md = mu.matchPolygon(sp, rp)
+                        #     if md >= precision:
+                        #     matchedPolygon.append(rp)
+                            print("sp :" + sp.oid + " "),
+                            print("rp :" + rp.oid + " "),
+                            print("   md:" + str(md))
 
                 matchedPolygonList.append(matchedPolygon)
     pro.stop()
