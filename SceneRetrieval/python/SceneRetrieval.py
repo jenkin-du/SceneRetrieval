@@ -3,10 +3,9 @@
 
     检索场景要素
 """
-import os
 import arcpy
 
-import ShapeUtil as su
+from tool import ShapeUtil as su
 from model.Constant import *
 from model.Programme import *
 from model.MatchedPolygon import *
