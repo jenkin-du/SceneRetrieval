@@ -6,8 +6,7 @@
 import os
 import arcpy
 
-import ShapeVector as sv
-import tool.MathUtil as mu
+import ShapeVector as SV
 from model.Constant import *
 from model.Layer import *
 from model.Programme import *
@@ -19,7 +18,7 @@ if __name__ == '__main__':
     # 搜索的场景图层
     sceneLayer = Layer
     sceneLayer.name = "scene.shp"
-    sceneLayer.polygons = sv.getVector(dataPath + "\\scene\\", sceneLayer.name)
+    sceneLayer.polygons = SV.getVector(dataPath + "\\scene\\", sceneLayer.name)
 
     # 待搜索的数据
     layerList = []
@@ -36,17 +35,14 @@ if __name__ == '__main__':
         if os.path.isfile(fp) and len(f.split(".")) == 2 and f.split(".")[1] == "shp":
             desc = arcpy.Describe(fp)
             if desc.shapeType == 'Polygon':
-                polygons = sv.getVector(dataPath, f)  # type: list[Polygon]
+                polygons = SV.getVector(dataPath, f)  # type: list[Polygon]
 
                 for sp in sceneLayer.polygons:
                     for p in polygons:
                         # 计算匹配读
-                        sv = sp.vectorList[0]
-                        pvList = p.vectorList
-                        for pv in pvList:
-                            md = mu.matchVector(sv, pv)
-                            print("sp :" + sp.oid + " "),
-                            print("rp :" + p.oid + " "),
-                            print("   md:" + str(md))
+                        md = mu.matchVector(sp.vector, p.vector)
+                        print("sp :" + sp.oid + " "),
+                        print("rp :" + p.oid + " "),
+                        print("   md:" + str(md))
 
     pro.stop()

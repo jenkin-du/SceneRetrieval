@@ -11,7 +11,9 @@ class Polygon(object):
 
     partList = []  # type: List[List[Point]] # 面状要素的部分集合
 
-    vectorList = []  # type: List[List[float]] # 形状矢量
+    vector = []  # type: List[float] # 形状矢量
+
+    orient = 0  # 方向 方位角（0，180）
 
     def __str__(self):
         return self.oid
