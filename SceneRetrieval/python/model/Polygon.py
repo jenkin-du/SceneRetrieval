@@ -15,6 +15,8 @@ class Polygon(object):
 
     orient = 0  # 方向 方位角（0，180）
 
+    envelope = Envelope()  #外包矩形
+
     def __str__(self):
         return self.oid
 
