@@ -52,7 +52,11 @@ def calculateGravity(pointList):
     return gravity
 
 
-# 计算两个坐标点的距离
+'''
+    计算两个坐标点的距离
+'''
+
+
 def pointDistance(p1, p2):
     return np.sqrt(np.square(p1.x - p2.x) + np.square(p1.y - p2.y))
 
@@ -77,7 +81,11 @@ def matchVector(sceneVector, retrievalVector):
     return 1 - d
 
 
-#计算多边形的对角线长度
+'''
+    计算多边形的对角线长度
+'''
+
+
 def polygonCatercorner(polygon):
     # 将重心移到原点
     gravity = polygon.gravity
@@ -111,4 +119,30 @@ def polygonCatercorner(polygon):
                 rt.y = partList[i][k].y
 
     # 正对角线长度
-    return pointDistance(rt, lb),partList
+    return pointDistance(rt, lb), partList
+
+
+'''
+    给定两个点，算方位角
+'''
+
+
+def pointAzimuth(originPoint, angularPoint):
+    dx = angularPoint.x - originPoint.x
+    dy = angularPoint.y - originPoint.y
+
+    azimuth = 0
+    if dx > 0 and dy >= 0:
+        azimuth = (np.pi / 2 - np.arctan(dy / dx))
+    if dx > 0 > dy:
+        azimuth = (np.pi / 2 + np.arctan(np.abs(dy) / dx))
+    if dx < 0 <= dy:
+        azimuth = (np.pi * 3 / 2 + np.arctan(dy / np.abs(dx)))
+    if dx < 0 and dy < 0:
+        azimuth = (np.pi * 3 / 2 - np.arctan(np.abs(dy) / np.abs(dx)))
+    if dx == 0 and dy >= 0:
+        azimuth = 0
+    if dx == 0 and dy < 0:
+        azimuth = np.pi
+
+    return np.rad2deg(azimuth)

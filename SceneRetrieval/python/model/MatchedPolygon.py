@@ -2,13 +2,19 @@
 
 from model.Polygon import *
 
+'''
+    匹配的多边形
+'''
+
 
 class MatchedPolygon(object):
     # 原矢量
-    sourcePolygon = Polygon()
-    # 检索矢量
-    retrievalPolygon = Polygon()
+    origin = Polygon()
+    # 匹配的polygon列表
+    matchingList = []
     # 匹配度
-    matchingDegree = 0
+    mdList = []  # type:list[float]
     # 匹配时，原矢量的缩放比率
-    scale = 1
+    scaleList = []  # type:list[float]
+
+

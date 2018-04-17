@@ -130,3 +130,16 @@ def matchPolygon(sourcePolygon, retrievalPolygon):
 
     d = dArea / (sArea + rArea)
     return 1 - d, scale
+
+
+def indexOfMatched(matchedList, polygon):
+    '''
+
+    :param matchedList:
+    :param polygon:
+    :return:
+    '''
+
+    for i in range(len(matchedList)):
+        if matchedList[i].origin == polygon:
+            return i

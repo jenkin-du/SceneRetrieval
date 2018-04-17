@@ -15,6 +15,7 @@ class Polygon(object):
 
     area = 0  # 面积
 
+
     def __str__(self):
         return self.oid
 
