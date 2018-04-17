@@ -15,7 +15,7 @@ class RelationPair(object):
     lastPolygon = Polygon()
 
     # 该关联对相对于原场景中的关联对的匹配度
-    matchingDegree = 0
+    md = 0
 
     def __init__(self, polygonA, polygonB):
         self.firstPolygon = polygonA

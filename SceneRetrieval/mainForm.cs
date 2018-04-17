@@ -5,13 +5,17 @@ using SceneRetrieval.model;
 using static SceneRetrieval.model.PyProcess;
 using System.IO;
 using System.Text;
+using SceneRetrieval.tool;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SceneRetrieval
 {
     public partial class mainForm : Form
     {
         //设置python进程
-        PyProcess shapeVectorPy;
+        private PyProcess sceneRetrivalPy;
+
 
         public mainForm()
         {
@@ -27,39 +31,14 @@ namespace SceneRetrieval
         /// </summary>
         private void init()
         {
-            shapeVectorPy = new PyProcess("shapeVector.py");
-            //设置参数
-            PyArgument arg = new PyArgument();
-            arg.addArgument("polygon.shp");
-            shapeVectorPy.setArgument(arg);
+            sceneRetrivalPy = new PyProcess("SceneRetrieval.py");
             //添加事件响应
-            shapeVectorPy.setOutputHandler(new OutputHandler(handleOutput));
+            sceneRetrivalPy.setOutputHandler(new OutputHandler(handleOutput));
 
+            this.MaximizeBox = false;
         }
 
-        private void handleOutput(string output, int exitCode)
-        {
-            testBtn.Text = "测试Python";
-            testBtn.Enabled = true;
-            if (exitCode == 0)
-            {
-                StreamReader sr = new StreamReader(Program.tempPath+"data.cp", Encoding.Default);
-                String line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    Console.WriteLine(line.ToString());
-                }
-                sr.Close();
-                MessageBox.Show("测试成功！！");
-            }
-            else
-            {
-                MessageBox.Show("程序出错！！");
-            }
-
-            Console.WriteLine(output);
-
-        }
+        
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
         {
@@ -88,13 +67,56 @@ namespace SceneRetrieval
 
         }
 
-        private void testBtn_Click(object sender, EventArgs e)
+    
+        private void retrievalBtn_Click(object sender, EventArgs e)
         {
-            shapeVectorPy.startProcess();
-            Console.WriteLine("开始执行！！！！！！！！！！！！！！！");
+            sceneRetrivalPy.startProcess();
 
-            testBtn.Text = "正在执行";
-            testBtn.Enabled = false;
+            retrievalBtn.Text = "正在检索";
+            retrievalBtn.Enabled = false;
+
+        }
+
+        private void handleOutput(string output, int exitCode)
+        {
+            retrievalBtn.Text = "检索";
+            retrievalBtn.Enabled = true;
+            String jsonOut = ""; 
+            if (exitCode == 0)
+            {
+                String line;
+                StreamReader sr = new StreamReader(Program.tempPath + "data", Encoding.Default);
+                while ((line = sr.ReadLine()) != null)
+                {
+                    jsonOut += line + "\n";
+                }
+                sr.Close();
+                Console.WriteLine(jsonOut);
+
+                List<SimilarScene> similarSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonOut);
+                for (int i = 0; i < similarSceneList.Count; i++)
+                {
+                    SimilarScene scene = similarSceneList[i];
+                    List<String> polygons = scene.polygonList;
+                    String result = "";
+                    for (int j = 0; j < polygons.Count; j++)
+                    {
+                        result += polygons[j] + ",";
+                    }
+                    result += " md:" + scene.md;
+
+                    resultLB.Items.Add(result);
+                }
+                MessageBox.Show("测试成功！！");
+            }
+            else
+            {
+                MessageBox.Show("程序出错！！");
+            }
+
+
+            
+
         }
     }
 }

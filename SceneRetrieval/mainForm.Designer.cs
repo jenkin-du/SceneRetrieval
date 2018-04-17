@@ -32,10 +32,16 @@ namespace SceneRetrieval
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
             this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
             this.status = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.axMap = new ESRI.ArcGIS.Controls.AxMapControl();
-            this.testBtn = new System.Windows.Forms.Button();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label3 = new System.Windows.Forms.Label();
+            this.sceneMap = new ESRI.ArcGIS.Controls.AxMapControl();
+            this.resultLB = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.retrievalBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -44,6 +50,11 @@ namespace SceneRetrieval
             this.splitContainer1.SuspendLayout();
             this.status.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sceneMap)).BeginInit();
             this.SuspendLayout();
             // 
             // axLicenseControl1
@@ -72,15 +83,27 @@ namespace SceneRetrieval
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.status);
             this.splitContainer1.Panel1.Controls.Add(this.axMap);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.testBtn);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(854, 420);
-            this.splitContainer1.SplitterDistance = 631;
+            this.splitContainer1.SplitterDistance = 609;
             this.splitContainer1.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label2.Font = new System.Drawing.Font("ËÎÌå", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(520, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 16);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Êý¾Ý¿â";
             // 
             // status
             // 
@@ -88,7 +111,7 @@ namespace SceneRetrieval
             this.statusLabel});
             this.status.Location = new System.Drawing.Point(0, 398);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(631, 22);
+            this.status.Size = new System.Drawing.Size(609, 22);
             this.status.TabIndex = 1;
             this.status.Text = "statusStrip1";
             // 
@@ -103,21 +126,81 @@ namespace SceneRetrieval
             this.axMap.Location = new System.Drawing.Point(0, 0);
             this.axMap.Name = "axMap";
             this.axMap.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap.OcxState")));
-            this.axMap.Size = new System.Drawing.Size(631, 420);
+            this.axMap.Size = new System.Drawing.Size(609, 420);
             this.axMap.TabIndex = 0;
             this.axMap.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMap_OnMouseDown);
             this.axMap.OnMouseUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseUpEventHandler(this.axMap_OnMouseUp);
             this.axMap.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMap_OnMouseMove);
             // 
-            // testBtn
+            // splitContainer2
             // 
-            this.testBtn.Location = new System.Drawing.Point(72, 306);
-            this.testBtn.Name = "testBtn";
-            this.testBtn.Size = new System.Drawing.Size(92, 23);
-            this.testBtn.TabIndex = 3;
-            this.testBtn.Text = "²âÊÔpython\r\n";
-            this.testBtn.UseVisualStyleBackColor = true;
-            this.testBtn.Click += new System.EventHandler(this.testBtn_Click);
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.label3);
+            this.splitContainer2.Panel1.Controls.Add(this.sceneMap);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.resultLB);
+            this.splitContainer2.Panel2.Controls.Add(this.label1);
+            this.splitContainer2.Panel2.Controls.Add(this.retrievalBtn);
+            this.splitContainer2.Size = new System.Drawing.Size(241, 420);
+            this.splitContainer2.SplitterDistance = 214;
+            this.splitContainer2.TabIndex = 4;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label3.Font = new System.Drawing.Font("ËÎÌå", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Location = new System.Drawing.Point(189, 14);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 16);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "³¡¾°";
+            // 
+            // sceneMap
+            // 
+            this.sceneMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sceneMap.Location = new System.Drawing.Point(0, 0);
+            this.sceneMap.Name = "sceneMap";
+            this.sceneMap.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("sceneMap.OcxState")));
+            this.sceneMap.Size = new System.Drawing.Size(241, 214);
+            this.sceneMap.TabIndex = 0;
+            // 
+            // resultLB
+            // 
+            this.resultLB.FormattingEnabled = true;
+            this.resultLB.ItemHeight = 12;
+            this.resultLB.Location = new System.Drawing.Point(-1, 57);
+            this.resultLB.Name = "resultLB";
+            this.resultLB.Size = new System.Drawing.Size(242, 124);
+            this.resultLB.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "¼ìË÷½á¹û£º";
+            // 
+            // retrievalBtn
+            // 
+            this.retrievalBtn.Location = new System.Drawing.Point(66, 12);
+            this.retrievalBtn.Name = "retrievalBtn";
+            this.retrievalBtn.Size = new System.Drawing.Size(75, 23);
+            this.retrievalBtn.TabIndex = 1;
+            this.retrievalBtn.Text = "¼ìË÷";
+            this.retrievalBtn.UseVisualStyleBackColor = true;
+            this.retrievalBtn.Click += new System.EventHandler(this.retrievalBtn_Click);
             // 
             // mainForm
             // 
@@ -127,8 +210,9 @@ namespace SceneRetrieval
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.axToolbarControl1);
             this.Controls.Add(this.axLicenseControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "mainForm";
-            this.Text = "³¡¾°¼ìË÷";
+            this.Text = "³¡¾°¼ìË÷£º";
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -139,6 +223,13 @@ namespace SceneRetrieval
             this.status.ResumeLayout(false);
             this.status.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axMap)).EndInit();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.sceneMap)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -151,7 +242,13 @@ namespace SceneRetrieval
         private System.Windows.Forms.StatusStrip status;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private ESRI.ArcGIS.Controls.AxMapControl axMap;
-        private System.Windows.Forms.Button testBtn;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private ESRI.ArcGIS.Controls.AxMapControl sceneMap;
+        private System.Windows.Forms.Button retrievalBtn;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox resultLB;
     }
 }
 

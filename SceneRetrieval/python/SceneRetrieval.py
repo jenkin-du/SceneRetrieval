@@ -5,12 +5,14 @@
 """
 import arcpy
 import numpy as np
+import json
 
 from tool import ShapeUtil as su
 from model.Constant import *
 from model.Programme import *
 from model.MatchedPolygon import *
 from model.Scene import *
+from model.SimilarScene import *
 
 if __name__ == '__main__':
 
@@ -120,17 +122,29 @@ if __name__ == '__main__':
                     md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
 
                 if md > precision:
-                    pr.matchingDegree = md
+                    pr.md = md
                     # 将生成的关联对加入到中的列表里
                     relationPairList.append(pr)
 
+    similarSceneList = []  # type:list[SimilarScene]
     for pr in relationPairList:
         fp = pr.firstPolygon
         lp = pr.lastPolygon
-        print("pa_id:"),
-        print(fp.oid),
-        print(" pb_id:"),
-        print(lp.oid),
-        print(" md:"),
-        print(pr.matchingDegree)
+
+        scene = SimilarScene()
+        plist = [fp.oid, lp.oid]  # type:list[str]
+
+        scene.polygonList = plist
+        scene.md = pr.md
+        similarSceneList.append(scene)
+        # print("pa_id:"),
+        # print(fp.oid),
+        # print(" pb_id:"),
+        # print(lp.oid),
+        # print(" md:"),
+        # print(pr.md)
+    # 序列化
+    fp = open(tempPath + "data", 'w')
+    json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    fp.close()
     pro.stop()

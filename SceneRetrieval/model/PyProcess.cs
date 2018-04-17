@@ -46,7 +46,6 @@ namespace SceneRetrieval.model
         public void setArgument(PyArgument arg)
         {
             mProcess.StartInfo.Arguments += arg.getArgument();
-            Console.WriteLine(mProcess.StartInfo.Arguments);
         }
 
 
