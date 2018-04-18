@@ -4,7 +4,7 @@ using System.IO;
 
 namespace SceneRetrieval.model
 {
-    class PythonProcess
+    class PyProcess
     {
 
         public delegate void OutputHandler(String output, int exitCode);
@@ -17,11 +17,11 @@ namespace SceneRetrieval.model
         /// 初始化
         /// </summary>
         /// <param name="pyFile"></param>
-        public PythonProcess(String pyFile)
+        public PyProcess(String pyFile)
         {
             mProcess = new Process();
-            mProcess.StartInfo.FileName = Program.pythonExePath;
-            mProcess.StartInfo.Arguments = Program.pythonFilePath + pyFile;
+            mProcess.StartInfo.FileName = Program.pyExePath;
+            mProcess.StartInfo.Arguments = Program.pyFilePath + pyFile;
 
 
             mProcess.StartInfo.UseShellExecute = false;

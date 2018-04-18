@@ -5,7 +5,7 @@
 '''
 
 from model.Point import *
-import mathUtil as mu
+import tool.MathUtil as mu
 
 
 class Polyline(object):
@@ -27,21 +27,23 @@ class Polyline(object):
 
 
 class Line(object):
+    # id
+    oid = ""
     # 起止点
     startPoint = Point()
     endPoint = Point()
     # 长度
-    _length = 0
+    length = 0
     # 顶点序列
     pointList = []  # type: List[Point]
 
     def getLength(self):
 
-        if self._length == 0:
+        if self.length == 0:
             p1 = self.pointList[0]
             for i in range(2, len(self.pointList)):
                 p2 = self.pointList[i]
-                self._length += mu.pointDistance(p1, p2)
+                self.length += mu.pointDistance(p1, p2)
                 p1 = p2
 
-        return self._length
+        return self.length
