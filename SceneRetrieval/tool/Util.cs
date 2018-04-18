@@ -4,33 +4,76 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using SceneRetrieval.model;
+using ESRI.ArcGIS.Carto;
 
 namespace SceneRetrieval.tool
 {
     class Util
     {
-        /// <summary>
-        /// 将对象解析成json字符串
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public static String toJsonString(Object obj)
+
+        public static void sort(List<SimilarScene> sceneList)
         {
 
-            return JsonConvert.SerializeObject(obj);
+            for (int i = 0; i < sceneList.Count; i++)
+            {
+                sceneList[i].md *= 1000;
+            }
+
+
+            int k = 0;
+            SimilarScene temp;
+            for (int i = 0; i < sceneList.Count - 1; i++)
+            {
+                k = i;
+                for (int j = i + 1; j < sceneList.Count; j++)
+                {
+                    if (sceneList[j].md > sceneList[k].md)
+                    {
+                        k = j;
+                    }
+                }
+
+                if (k != i)
+                {
+                    temp = sceneList[i];
+                    sceneList[i] = sceneList[k];
+                    sceneList[k] = temp;
+                }
+
+            }
+
+            for (int i = 0; i < sceneList.Count; i++)
+            {
+                sceneList[i].md /= 1000;
+            }
+
         }
 
-        /// <summary>
-        /// 将json字符串解析成对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="jsonString"></param>
-        /// <returns></returns>
-        public static T toObject<T>(String jsonString)
+
+        // 根据图层名获取图层
+        //<param name="pMap">地图文档</param>
+        // <param name="sLyrName">图层名</param>
+        public static ILayer getLayerByName(IMap pMap, string sLyrName)
         {
-
-
-            return JsonConvert.DeserializeObject<T>(jsonString);
+            ILayer pLyr = null;
+            ILayer pLayer = null;
+            try
+            {
+                for (int i = 0; i < pMap.LayerCount; i++)
+                {
+                    pLyr = pMap.get_Layer(i);
+                    if (pLyr.Name.ToUpper() == sLyrName.ToUpper())
+                    {
+                        pLayer = pLyr;
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return pLayer;
         }
     }
 }

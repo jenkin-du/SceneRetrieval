@@ -1,6 +1,6 @@
 namespace SceneRetrieval
 {
-    partial class mainForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,8 @@ namespace SceneRetrieval
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
-            this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
             this.status = new System.Windows.Forms.StatusStrip();
@@ -39,11 +38,13 @@ namespace SceneRetrieval
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
             this.sceneMap = new ESRI.ArcGIS.Controls.AxMapControl();
-            this.resultLB = new System.Windows.Forms.ListBox();
+            this.dataView = new System.Windows.Forms.DataGridView();
+            this.layerCN = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mdCN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.retrievalBtn = new System.Windows.Forms.Button();
+            this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,6 +56,8 @@ namespace SceneRetrieval
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sceneMap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).BeginInit();
             this.SuspendLayout();
             // 
             // axLicenseControl1
@@ -66,18 +69,10 @@ namespace SceneRetrieval
             this.axLicenseControl1.Size = new System.Drawing.Size(32, 32);
             this.axLicenseControl1.TabIndex = 0;
             // 
-            // axToolbarControl1
-            // 
-            this.axToolbarControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.axToolbarControl1.Location = new System.Drawing.Point(0, 0);
-            this.axToolbarControl1.Name = "axToolbarControl1";
-            this.axToolbarControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axToolbarControl1.OcxState")));
-            this.axToolbarControl1.Size = new System.Drawing.Size(854, 28);
-            this.axToolbarControl1.TabIndex = 1;
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 28);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -91,7 +86,7 @@ namespace SceneRetrieval
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(854, 420);
-            this.splitContainer1.SplitterDistance = 609;
+            this.splitContainer1.SplitterDistance = 589;
             this.splitContainer1.TabIndex = 2;
             // 
             // label2
@@ -99,7 +94,7 @@ namespace SceneRetrieval
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.label2.Font = new System.Drawing.Font("ËÎÌå", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(520, 14);
+            this.label2.Location = new System.Drawing.Point(509, 14);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 16);
             this.label2.TabIndex = 2;
@@ -111,7 +106,7 @@ namespace SceneRetrieval
             this.statusLabel});
             this.status.Location = new System.Drawing.Point(0, 398);
             this.status.Name = "status";
-            this.status.Size = new System.Drawing.Size(609, 22);
+            this.status.Size = new System.Drawing.Size(589, 22);
             this.status.TabIndex = 1;
             this.status.Text = "statusStrip1";
             // 
@@ -126,7 +121,7 @@ namespace SceneRetrieval
             this.axMap.Location = new System.Drawing.Point(0, 0);
             this.axMap.Name = "axMap";
             this.axMap.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMap.OcxState")));
-            this.axMap.Size = new System.Drawing.Size(609, 420);
+            this.axMap.Size = new System.Drawing.Size(589, 420);
             this.axMap.TabIndex = 0;
             this.axMap.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMap_OnMouseDown);
             this.axMap.OnMouseUp += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseUpEventHandler(this.axMap_OnMouseUp);
@@ -135,6 +130,7 @@ namespace SceneRetrieval
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.IsSplitterFixed = true;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -146,11 +142,11 @@ namespace SceneRetrieval
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.resultLB);
+            this.splitContainer2.Panel2.Controls.Add(this.dataView);
             this.splitContainer2.Panel2.Controls.Add(this.label1);
             this.splitContainer2.Panel2.Controls.Add(this.retrievalBtn);
-            this.splitContainer2.Size = new System.Drawing.Size(241, 420);
-            this.splitContainer2.SplitterDistance = 214;
+            this.splitContainer2.Size = new System.Drawing.Size(261, 420);
+            this.splitContainer2.SplitterDistance = 210;
             this.splitContainer2.TabIndex = 4;
             // 
             // label3
@@ -159,7 +155,7 @@ namespace SceneRetrieval
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.label3.Font = new System.Drawing.Font("ËÎÌå", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(189, 14);
+            this.label3.Location = new System.Drawing.Point(209, 14);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 16);
             this.label3.TabIndex = 1;
@@ -171,22 +167,56 @@ namespace SceneRetrieval
             this.sceneMap.Location = new System.Drawing.Point(0, 0);
             this.sceneMap.Name = "sceneMap";
             this.sceneMap.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("sceneMap.OcxState")));
-            this.sceneMap.Size = new System.Drawing.Size(241, 214);
+            this.sceneMap.Size = new System.Drawing.Size(261, 210);
             this.sceneMap.TabIndex = 0;
             // 
-            // resultLB
+            // dataView
             // 
-            this.resultLB.FormattingEnabled = true;
-            this.resultLB.ItemHeight = 12;
-            this.resultLB.Location = new System.Drawing.Point(-1, 57);
-            this.resultLB.Name = "resultLB";
-            this.resultLB.Size = new System.Drawing.Size(242, 124);
-            this.resultLB.TabIndex = 4;
+            this.dataView.AllowUserToAddRows = false;
+            this.dataView.AllowUserToResizeColumns = false;
+            this.dataView.AllowUserToResizeRows = false;
+            this.dataView.BackgroundColor = System.Drawing.SystemColors.Control;
+            this.dataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.layerCN,
+            this.mdCN});
+            this.dataView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataView.Location = new System.Drawing.Point(2, 32);
+            this.dataView.Name = "dataView";
+            this.dataView.ReadOnly = true;
+            this.dataView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            this.dataView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataView.RowTemplate.Height = 20;
+            this.dataView.RowTemplate.ReadOnly = true;
+            this.dataView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataView.Size = new System.Drawing.Size(259, 170);
+            this.dataView.TabIndex = 4;
+            this.dataView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataView_CellClick);
+            this.dataView.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataView_RowHeaderMouseClick);
+            // 
+            // layerCN
+            // 
+            this.layerCN.HeaderText = "Í¼²ã";
+            this.layerCN.Name = "layerCN";
+            this.layerCN.ReadOnly = true;
+            this.layerCN.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.layerCN.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // mdCN
+            // 
+            this.mdCN.HeaderText = "Æ¥Åä¶È";
+            this.mdCN.Name = "mdCN";
+            this.mdCN.ReadOnly = true;
+            this.mdCN.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.mdCN.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.mdCN.Width = 115;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 43);
+            this.label1.Font = new System.Drawing.Font("ËÎÌå", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(3, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 3;
@@ -194,7 +224,7 @@ namespace SceneRetrieval
             // 
             // retrievalBtn
             // 
-            this.retrievalBtn.Location = new System.Drawing.Point(66, 12);
+            this.retrievalBtn.Location = new System.Drawing.Point(91, 3);
             this.retrievalBtn.Name = "retrievalBtn";
             this.retrievalBtn.Size = new System.Drawing.Size(75, 23);
             this.retrievalBtn.TabIndex = 1;
@@ -202,7 +232,16 @@ namespace SceneRetrieval
             this.retrievalBtn.UseVisualStyleBackColor = true;
             this.retrievalBtn.Click += new System.EventHandler(this.retrievalBtn_Click);
             // 
-            // mainForm
+            // axToolbarControl1
+            // 
+            this.axToolbarControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.axToolbarControl1.Location = new System.Drawing.Point(0, 0);
+            this.axToolbarControl1.Name = "axToolbarControl1";
+            this.axToolbarControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axToolbarControl1.OcxState")));
+            this.axToolbarControl1.Size = new System.Drawing.Size(854, 28);
+            this.axToolbarControl1.TabIndex = 1;
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -211,10 +250,11 @@ namespace SceneRetrieval
             this.Controls.Add(this.axToolbarControl1);
             this.Controls.Add(this.axLicenseControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Name = "mainForm";
-            this.Text = "³¡¾°¼ìË÷£º";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.Name = "MainForm";
+            this.Text = "³¡¾°¼ìË÷";
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -230,6 +270,8 @@ namespace SceneRetrieval
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sceneMap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axToolbarControl1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -248,7 +290,9 @@ namespace SceneRetrieval
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox resultLB;
+        private System.Windows.Forms.DataGridView dataView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn layerCN;
+        private System.Windows.Forms.DataGridViewTextBoxColumn mdCN;
     }
 }
 

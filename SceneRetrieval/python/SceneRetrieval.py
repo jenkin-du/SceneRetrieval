@@ -136,13 +136,11 @@ if __name__ == '__main__':
 
         scene.polygonList = plist
         scene.md = pr.md
+
+        envelopeList = [fp.envelope, lp.envelope]
+        scene.gravity, scene.envelope = mu.getEnvelopeGravity(envelopeList)
+
         similarSceneList.append(scene)
-        # print("pa_id:"),
-        # print(fp.oid),
-        # print(" pb_id:"),
-        # print(lp.oid),
-        # print(" md:"),
-        # print(pr.md)
     # 序列化
     fp = open(tempPath + "data", 'w')
     json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)

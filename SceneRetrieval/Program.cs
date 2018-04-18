@@ -33,7 +33,7 @@ namespace SceneRetrieval
             dataPath = Directory.GetParent(Directory.GetParent(programPath).ToString()) +@"\data\";
             tempPath= Directory.GetParent(Directory.GetParent(programPath).ToString()) + @"\temp\";
 
-            Application.Run(new mainForm());
+            Application.Run(new MainForm());
         }
     }
 }

@@ -2,6 +2,8 @@
 
 import numpy as np
 import sympy as sym
+
+from model.Envelope import Envelope
 from model.Point import *
 from model.Constant import *
 import arcpy
@@ -82,24 +84,13 @@ def matchVector(sceneVector, retrievalVector):
 
 
 '''
-    计算多边形的对角线长度
+    获得多边形的外包矩形
 '''
 
 
-def polygonCatercorner(polygon):
-    # 将重心移到原点
-    gravity = polygon.gravity
-    partList = []
-    for part in polygon.partList:
-        p = []
-        for pnt in part:
-            point = Point()
-            point.x = pnt.x - gravity.x
-            point.y = pnt.y - gravity.y
-
-            p.append(point)
-        partList.append(p)
-
+def polygonEnvelope(polygon):
+    # 多边形的顶点序列
+    partList = polygon.partList
     # 两个顶点
     rt = Point()
     lb = Point()
@@ -118,8 +109,75 @@ def polygonCatercorner(polygon):
             if partList[i][k].y > rt.y:
                 rt.y = partList[i][k].y
 
+    envelope = Envelope()
+    envelope.rtPoint = rt
+    envelope.lbPoint = lb
+
+    return envelope
+
+
+'''
+    将多个多边形的外包矩形合并为一个最大的
+'''
+
+
+def getEnvelopeGravity(envelopeList):
+    #
+    rtPoint = Point()
+    lbPoint = Point()
+    rtPoint.x = lbPoint.x = envelopeList[0].rtPoint.x
+    rtPoint.y = lbPoint.y = envelopeList[0].lbPoint.y
+    for envelope in envelopeList:
+        rt = envelope.rtPoint
+        lb = envelope.lbPoint
+
+        if lb.x < lbPoint.x:
+            lbPoint.x = lb.x
+        if lb.y < lbPoint.y:
+            lbPoint.y = lb.y
+        if rt.x > rtPoint.x:
+            rtPoint.x = rt.x
+        if rt.y > rtPoint.y:
+            rtPoint.y = rt.y
+
+    envelope = Envelope()
+    envelope.lbPoint = lbPoint
+    envelope.rtPoint = rtPoint
+    gravity = Point()
+    gravity.x = (rtPoint.x + lbPoint.x) / 2
+    gravity.y = (rtPoint.y + lbPoint.y) / 2
+
+    return gravity,envelope
+
+    pass
+
+
+'''
+    计算多边形的对角线长度
+'''
+
+
+def polygonCatercorner(polygon):
+    # 获得外包矩形
+    polygon.envelope = polygonEnvelope(polygon)
+
     # 正对角线长度
-    return pointDistance(rt, lb), partList
+    dis = pointDistance(polygon.envelope.lbPoint, polygon.envelope.rtPoint)
+
+    # 将重心移到原点
+    gravity = polygon.gravity
+    partList = []
+    for part in polygon.partList:
+        p = []
+        for pnt in part:
+            point = Point()
+            point.x = pnt.x - gravity.x
+            point.y = pnt.y - gravity.y
+
+            p.append(point)
+        partList.append(p)
+
+    return dis, partList
 
 
 '''

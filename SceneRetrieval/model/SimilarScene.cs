@@ -12,5 +12,15 @@ namespace SceneRetrieval.model
         public List<String> polygonList;
         //匹配度
         public float md = 0;
+
+        //重心坐标
+        public Point gravity;
+
+        //外接矩形
+        public Envelope envelope;
+        
+
+
+   
     }
 }
