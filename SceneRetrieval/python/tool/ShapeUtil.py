@@ -4,8 +4,6 @@
 
     该程序获得面状要素的形状矢量
 """
-import arcpy
-import numpy as np
 
 import MathUtil as mu
 from model.Polygon import *
@@ -23,7 +21,6 @@ def getPolygonList(workspace, shapeName):
     # 设置工作空间
     arcpy.env.workspace = workspace
     arcpy.env.overwriteOutput = True
-    # 设置没内存工作空间
 
     polygonList = []  # type: list[Polygon]
 
@@ -32,6 +29,8 @@ def getPolygonList(workspace, shapeName):
         for row in cursor:
             polygon = row[1]
             polygon.oid = shapeName.split(".")[0] + "_" + bytes(row[0])
+            polygon.catercorner = mu.pointDistance(polygon.extent.lowerLeft, polygon.extent.upperRight)
+            polygon.isCreated = False
             polygonList.append(polygon)
 
         del cursor
@@ -41,33 +40,33 @@ def getPolygonList(workspace, shapeName):
 
 # 计算两个图形的相似性
 def matchPolygon(sourcePolygon, retrievalPolygon):
-    # 正对角线长度
-    s_len, sourcePartList = mu.polygonCatercorner(sourcePolygon)
+    # 获取归一化后的坐标
+    sourcePartList = sourcePolygon.uniformedPartList
 
-    # 正对角线长度
-    r_len, retrievalPartList = mu.polygonCatercorner(retrievalPolygon)
+    # 计算缩放比
+    scale = sourcePolygon.catercorner / retrievalPolygon.catercorner
 
-    scale = r_len / s_len
-    for polygon in sourcePartList:
-        for array in polygon:
-            for pnt in array:
-                pnt.X *= scale
-                pnt.Y *= scale
+    # 归一化，将重心移到原点
+    retrievalPartList = mu.polygonUniformization(retrievalPolygon, scale)
 
     # 构建多边形求交
     arcpy.env.workspace = dataPath
     arcpy.env.overwriteOutput = True
 
-    workspace = ""
-    suffix=".shp"
-    sourceInFeature = workspace + sourcePolygon.oid + "_in"+suffix
-    arcpy.CopyFeatures_management(sourcePartList, sourceInFeature)
+    workspace = "in_memory\\"
+    suffix = ""
 
-    retrievalInFeature = workspace + retrievalPolygon.oid + "_in"+suffix
+    sourceInFeature = workspace + sourcePolygon.oid + "_in" + suffix
+    # 如果没有创建，就新建一个
+    if not sourcePolygon.isCreated:
+        arcpy.CopyFeatures_management(sourcePartList, sourceInFeature)
+        sourcePolygon.isCreated = True
+
+    retrievalInFeature = workspace + retrievalPolygon.oid + "_in" + suffix
     arcpy.CopyFeatures_management(retrievalPartList, retrievalInFeature)
 
     # 相交取反
-    diffOutFeature = workspace + retrievalPolygon.oid + "_diff"+suffix
+    diffOutFeature = workspace + retrievalPolygon.oid + "_diff" + suffix
     arcpy.SymDiff_analysis(sourceInFeature, retrievalInFeature, diffOutFeature)
     # 求取差异面积，求差异度
     sArea = 0
@@ -86,7 +85,6 @@ def matchPolygon(sourcePolygon, retrievalPolygon):
 
     # 删除中间数据
     arcpy.Delete_management(diffOutFeature)
-    arcpy.Delete_management(sourceInFeature)
     arcpy.Delete_management(retrievalInFeature)
 
     d = dArea / (sArea + rArea)

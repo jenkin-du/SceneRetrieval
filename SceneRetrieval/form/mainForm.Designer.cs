@@ -253,7 +253,7 @@ namespace SceneRetrieval
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "³¡¾°¼ìË÷";
+            this.Text = " ";
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();

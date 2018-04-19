@@ -4,10 +4,9 @@ using System.IO;
 
 namespace SceneRetrieval.model
 {
+    public delegate void OutputHandler(String output, int exitCode);
     class PyProcess
     {
-
-        public delegate void OutputHandler(String output, int exitCode);
         //处理返回数据的委托
         private OutputHandler mOutputHandler;
         //python进程

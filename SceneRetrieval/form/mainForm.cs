@@ -2,7 +2,6 @@ using ESRI.ArcGIS.Controls;
 using System;
 using System.Windows.Forms;
 using SceneRetrieval.model;
-using static SceneRetrieval.model.PyProcess;
 using System.IO;
 using System.Text;
 using SceneRetrieval.tool;
@@ -213,12 +212,15 @@ namespace SceneRetrieval
             double sceenScale = sceenMax / sceenMin;
 
 
-            model.Point gravity = scene.gravity;
+          
 
-            float scale = 4.0f;
+            float scale = 2.0f;
             model.Envelope envelope = scene.envelope;
-            double width = envelope.Width;
-            double height = envelope.Height;
+
+            model.Point gravity = new model.Point((envelope.xMin+envelope.xMax)/2,(envelope.yMin+envelope.yMax) /2);
+
+            double width = envelope.xMax - envelope.xMin;
+            double height = envelope.yMax - envelope.yMin;
             double max = width > height ? width : height;
 
             if (sceenHeight == sceenMin)

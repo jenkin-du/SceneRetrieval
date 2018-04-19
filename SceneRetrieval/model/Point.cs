@@ -8,9 +8,14 @@ namespace SceneRetrieval.model
 {
     class Point
     {
-        public float x;
-        public float y;
+        public double x;
+        public double y;
 
+        public Point(double x,double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
         
 
 

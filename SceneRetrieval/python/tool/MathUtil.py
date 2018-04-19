@@ -5,6 +5,9 @@ import arcpy
 
 
 # 将坐标旋转给定的角度,角度单位为°
+from model.Envelope import Envelope
+
+
 def rotateCoord(gp, pt, deg):
     rad = np.deg2rad(deg)
     X = pt.X
@@ -63,14 +66,14 @@ def pointDistance(p1, p2):
 '''
 
 
-def getExtent(extentList):
+def getEnvelope(extentList):
     #
 
-    xMax = 0
-    yMax = 0
+    xMax = extentList[0].XMax
+    yMax = extentList[0].YMax
 
-    xMin = 0
-    yMin = 0
+    xMin = extentList[0].XMin
+    yMin = extentList[0].YMin
 
     for extent in extentList:
 
@@ -83,7 +86,7 @@ def getExtent(extentList):
         if yMax < extent.YMax:
             yMax = extent.YMax
 
-    return arcpy.Extent(xMin, yMin, xMax, yMax)
+    return Envelope(xMin, yMin, xMax, yMax)
 
     pass
 
@@ -93,25 +96,23 @@ def getExtent(extentList):
 '''
 
 
-def polygonCatercorner(polygon):
-    # 正对角线长度
-    dis = pointDistance(polygon.extent.lowerLeft, polygon.extent.upperRight)
-
+def polygonUniformization(polygon, scale=1):
     # 将重心移到原点
     centroid = polygon.centroid
+
     polylineList = []
     for part in polygon:
         array = arcpy.Array()
         for pnt in part:
             point = arcpy.Point()
-            point.X = pnt.X - centroid.X
-            point.Y = pnt.Y - centroid.Y
+            point.X = (pnt.X - centroid.X) * scale
+            point.Y = (pnt.Y - centroid.Y) * scale
 
             array.append(point)
         polygon = arcpy.Polygon(array)
         polylineList.append(polygon)
 
-    return dis, polylineList
+    return polylineList
 
 
 '''
