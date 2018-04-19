@@ -35,7 +35,7 @@ class Line(object):
     # 长度
     length = 0
     # 顶点序列
-    pointList = []  # type: List[Point]
+    pointList = []  # type: list[Point]
 
     def getLength(self):
 
