@@ -14,7 +14,7 @@ class Polyline(object):
     # 起止点
     startPoint = Point()
     endPoint = Point()
-    lines = []  # type: List[Line]
+    lines = []  # type: list[Line]
     # 长度
     _length = 0
 
