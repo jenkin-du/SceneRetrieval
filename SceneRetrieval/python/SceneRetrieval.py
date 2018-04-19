@@ -19,7 +19,7 @@ if __name__ == '__main__':
     pro = Programme()
     pro.start()
     # 搜索的场景图层
-    scenePolygons = su.getPointList(dataPath + "scene\\", "scene.shp")
+    scenePolygons = su.getPolygonList(dataPath + "scene\\", "scene.shp")
 
     originScene = Scene()
     originScene.polygonList = scenePolygons
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 desc = arcpy.Describe(fp)
                 if desc.shapeType == 'Polygon':
 
-                    polygons = su.getPointList(workPath, f)  # type: list[Polygon]
+                    polygons = su.getPolygonList(workPath, f)  # type: list[Polygon]
 
                     for rp in polygons:
 
@@ -55,94 +55,107 @@ if __name__ == '__main__':
                             scaleList.append(scale)
                             matchingDegreeList.append(md)
 
+                        print("sp:"),
+                        print(sp.oid),
+                        print(" rp:"),
+                        print(rp.oid),
+                        print(" md:"),
+                        print(md)
+
         mp.matchingList = matchingList
         mp.mdList = matchingDegreeList
         mp.scaleList = scaleList
 
         mpList.append(mp)
 
-    # 关联对列表
-    relationPairList = []  # type:list[RelationPair]
-    # 从场景中的关联对中找出与之匹配度高的关联对
-    for opr in originRelationPairList:
+    # # 关联对列表
+    # relationPairList = []  # type:list[RelationPair]
+    # # 从场景中的关联对中找出与之匹配度高的关联对
+    # for opr in originRelationPairList:
+    #
+    #     indexF = su.indexOfMatched(mpList, opr.firstPolygon)
+    #     indexL = su.indexOfMatched(mpList, opr.lastPolygon)
+    #     fmpList = mpList[indexF].matchingList
+    #     lmpList = mpList[indexL].matchingList
+    #
+    #     dmpListF = mpList[indexF].mdList
+    #     dmpListL = mpList[indexL].mdList
+    #
+    #     scaleListF = mpList[indexF].scaleList
+    #     scaleListL = mpList[indexL].scaleList
+    #
+    #     for i in range(len(fmpList)):
+    #         for j in range(len(lmpList)):
+    #
+    #             fp = fmpList[i]
+    #             lp = lmpList[j]
+    #             pr = RelationPair(fp, lp)
+    #
+    #             # 方向角的差异度
+    #             da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
+    #             # 重心距离的差异
+    #             # 考虑缩放相似性
+    #             fs = scaleListF[i]
+    #             ls = scaleListL[j]
+    #             dsc = np.abs(fs - ls)
+    #             av_sc = 1
+    #             if dsc < 0.1:
+    #                 av_sc = (fs + ls) / 2
+    #             dg = np.abs(opr.getGravityDistance() * av_sc - pr.getGravityDistance()) / (
+    #                     opr.getGravityDistance() * av_sc + pr.getGravityDistance())
+    #
+    #             # 总体差异度
+    #             md = 0
+    #             if da != 0 and dg != 0:
+    #                 md = (1 / dg * (1 - da) + 1 / da * (1 - dg)) / (1 / da + 1 / dg)
+    #             if da == 0 and dg == 0:
+    #                 md = 1
+    #             if da == 0:
+    #                 md = 1 - dg
+    #             if dg == 0:
+    #                 md = 1 - da
+    #
+    #             # 将形状差异度也加权到最终的结果中
+    #             fms = dmpListF[i]
+    #             lms = dmpListL[j]
+    #             if lms != 1 and fms != 1:
+    #                 ams = (1 / (1 - lms) * fms + 1 / (1 - fms) * lms) / (1 / (1 - lms) + 1 / (1 - fms))
+    #             else:
+    #                 ams = (lms + fms) / 2
+    #
+    #             ds = 1 - ams
+    #             dv = 1 - md
+    #             if ds != 0 and dv != 0:
+    #                 md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
+    #
+    #             if md > precision:
+    #                 pr.md = md
+    #                 # 将生成的关联对加入到中的列表里
+    #                 relationPairList.append(pr)
+    #
+    # similarSceneList = []  # type:list[SimilarScene]
+    # for pr in relationPairList:
+    #     fp = pr.firstPolygon
+    #     lp = pr.lastPolygon
+    #
+    #     scene = SimilarScene()
+    #     plist = [fp.oid, lp.oid]  # type:list[str]
+    #
+    #     scene.polygonList = plist
+    #     scene.md = pr.md
+    #
+    #     extentList = [fp.extent, lp.extent]
+    #     scene.extent = mu.getExtent(extentList)
+    #
+    #     similarSceneList.append(scene)
+    #
+    # for similar in similarSceneList:
+    #     print("polygon:"),
+    #     print(similar.polygonList[0]+","+similar.polygonList[1]),
+    #     print(" md:"+str(similar.md))
 
-        indexA = su.indexOfMatched(mpList, opr.firstPolygon)
-        indexB = su.indexOfMatched(mpList, opr.lastPolygon)
-        ampList = mpList[indexA].matchingList
-        bmpList = mpList[indexB].matchingList
-
-        dmpListA = mpList[indexA].mdList
-        dmpListB = mpList[indexB].mdList
-
-        scaleListA = mpList[indexA].scaleList
-        scaleListB = mpList[indexB].scaleList
-
-        for i in range(len(ampList)):
-            for j in range(len(bmpList)):
-
-                fp = ampList[i]
-                lp = bmpList[j]
-                pr = RelationPair(fp, lp)
-
-                # 方向角的差异度
-                da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
-                # 重心距离的差异
-                # 考虑缩放相似性
-                fs = scaleListA[i]
-                ls = scaleListB[j]
-                dsc = np.abs(fs - ls)
-                av_sc = 1
-                if dsc < 0.1:
-                    av_sc = (fs + ls) / 2
-                dg = np.abs(opr.getGravityDistance() * av_sc - pr.getGravityDistance()) / (
-                        opr.getGravityDistance() * av_sc + pr.getGravityDistance())
-
-                # 总体差异度
-                md = 0
-                if da != 0 and dg != 0:
-                    md = (1 / dg * (1 - da) + 1 / da * (1 - dg)) / (1 / da + 1 / dg)
-                if da == 0 and dg == 0:
-                    md = 1
-                if da == 0:
-                    md = 1 - dg
-                if dg == 0:
-                    md = 1 - da
-
-                # 将形状差异度也加权到最终的结果中
-                fms = dmpListA[i]
-                lms = dmpListB[j]
-                if lms != 1 and fms != 1:
-                    ams = (1 / (1 - lms) * fms + 1 / (1 - fms) * lms) / (1 / (1 - lms) + 1 / (1 - fms))
-                else:
-                    ams = (lms + fms) / 2
-
-                ds = 1 - ams
-                dv = 1 - md
-                if ds != 0 and dv != 0:
-                    md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
-
-                if md > precision:
-                    pr.md = md
-                    # 将生成的关联对加入到中的列表里
-                    relationPairList.append(pr)
-
-    similarSceneList = []  # type:list[SimilarScene]
-    for pr in relationPairList:
-        fp = pr.firstPolygon
-        lp = pr.lastPolygon
-
-        scene = SimilarScene()
-        plist = [fp.oid, lp.oid]  # type:list[str]
-
-        scene.polygonList = plist
-        scene.md = pr.md
-
-        envelopeList = [fp.envelope, lp.envelope]
-        scene.envelope = mu.getEnvelopeGravity(envelopeList)
-
-        similarSceneList.append(scene)
     # 序列化
-    fp = open(tempPath + "data", 'w')
-    json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    fp.close()
+    # fp = open(tempPath + "data", 'w')
+    # json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    # fp.close()
     pro.stop()

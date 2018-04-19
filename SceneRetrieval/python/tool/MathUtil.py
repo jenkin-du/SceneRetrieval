@@ -1,44 +1,39 @@
 # -*- coding:utf-8 -*-
 
 import numpy as np
-import sympy as sym
-
-from model.Envelope import Envelope
-from model.Point import *
-from model.Constant import *
 import arcpy
 
 
 # 将坐标旋转给定的角度,角度单位为°
 def rotateCoord(gp, pt, deg):
     rad = np.deg2rad(deg)
-    x = pt.x
-    y = pt.y
-    pt.x = (x - gp.x) * np.cos(rad) - (y - gp.y) * np.sin(rad) + gp.x
-    pt.y = (x - gp.x) * np.sin(rad) + (y - gp.y) * np.cos(rad) + gp.y
+    X = pt.X
+    Y = pt.Y
+    pt.X = (X - gp.X) * np.cos(rad) - (Y - gp.Y) * np.sin(rad) + gp.X
+    pt.Y = (X - gp.X) * np.sin(rad) + (Y - gp.Y) * np.cos(rad) + gp.Y
 
 
 # 获得多边形的重心，输入为多边形的顺序坐标
 def calculateGravity(pointList):
     # 重心坐标
-    gravity = Point()
+    centroid = arcpy.Point()
 
     p1 = pointList[0]
     p2 = pointList[1]
 
-    x1 = p1.x
-    y1 = p1.y
+    x1 = p1.X
+    y1 = p1.Y
 
     sum_x = 0
     sum_y = 0
     sum_area = 0
     for i in range(2, len(pointList)):
-        x2 = p2.x
-        y2 = p2.y
+        x2 = p2.X
+        y2 = p2.Y
 
         p3 = pointList[i]
-        x3 = p3.x
-        y3 = p3.y
+        x3 = p3.X
+        y3 = p3.Y
 
         area = ((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1)) / 2.0
 
@@ -48,10 +43,10 @@ def calculateGravity(pointList):
 
         p2 = p3
 
-    gravity.x = sum_x / sum_area / 3.0
-    gravity.y = sum_y / sum_area / 3.0
+    centroid.X = sum_x / sum_area / 3.0
+    centroid.Y = sum_y / sum_area / 3.0
 
-    return gravity
+    return centroid
 
 
 '''
@@ -60,60 +55,7 @@ def calculateGravity(pointList):
 
 
 def pointDistance(p1, p2):
-    return np.sqrt(np.square(p1.x - p2.x) + np.square(p1.y - p2.y))
-
-
-# 计算两个polygon的相似性
-def matchVector(sceneVector, retrievalVector):
-    """
-
-    :type sceneVector: list[float]
-    :type retrievalVector: list[float]
-    """
-    sv = sceneVector
-    rv = retrievalVector
-
-    # 两个polygon的差异度
-    d = 0
-    for i in range(len(sv)):
-        d += np.abs(sv[i] - rv[i])
-    d /= len(sv)
-
-    # 返回匹配度
-    return 1 - d
-
-
-'''
-    获得多边形的外包矩形
-'''
-
-
-def polygonEnvelope(polygon):
-    # 多边形的顶点序列
-    partList = polygon.partList
-    # 两个顶点
-    rt = Point()
-    lb = Point()
-    rt.x = lb.x = partList[0][0].x
-    rt.y = lb.y = partList[0][0].y
-
-    for i in range(len(partList)):
-        for k in range(len(partList[i])):
-            if partList[i][k].x < lb.x:
-                lb.x = partList[i][k].x
-            if partList[i][k].x > rt.x:
-                rt.x = partList[i][k].x
-
-            if partList[i][k].y < lb.y:
-                lb.y = partList[i][k].y
-            if partList[i][k].y > rt.y:
-                rt.y = partList[i][k].y
-
-    envelope = Envelope()
-    envelope.rtPoint = rt
-    envelope.lbPoint = lb
-
-    return envelope
+    return np.sqrt(np.square(p1.X - p2.X) + np.square(p1.Y - p2.Y))
 
 
 '''
@@ -121,60 +63,55 @@ def polygonEnvelope(polygon):
 '''
 
 
-def getEnvelopeGravity(envelopeList):
+def getExtent(extentList):
     #
-    rtPoint = Point()
-    lbPoint = Point()
-    rtPoint.x = lbPoint.x = envelopeList[0].rtPoint.x
-    rtPoint.y = lbPoint.y = envelopeList[0].lbPoint.y
-    for envelope in envelopeList:
-        rt = envelope.rtPoint
-        lb = envelope.lbPoint
 
-        if lb.x < lbPoint.x:
-            lbPoint.x = lb.x
-        if lb.y < lbPoint.y:
-            lbPoint.y = lb.y
-        if rt.x > rtPoint.x:
-            rtPoint.x = rt.x
-        if rt.y > rtPoint.y:
-            rtPoint.y = rt.y
+    xMax = 0
+    yMax = 0
 
-    envelope = Envelope()
-    envelope.lbPoint = lbPoint
-    envelope.rtPoint = rtPoint
+    xMin = 0
+    yMin = 0
 
-    return envelope
+    for extent in extentList:
+
+        if xMin > extent.XMin:
+            xMin = extent.XMin
+        if xMax < extent.XMax:
+            xMax = extent.XMax
+        if yMin > extent.YMin:
+            yMin = extent.YMin
+        if yMax < extent.YMax:
+            yMax = extent.YMax
+
+    return arcpy.Extent(xMin, yMin, xMax, yMax)
 
     pass
 
 
 '''
-    计算多边形的对角线长度
+    计算多边形的对角线长度,并将重心移到原点
 '''
 
 
 def polygonCatercorner(polygon):
-    # 获得外包矩形
-    polygon.envelope = polygonEnvelope(polygon)
-
     # 正对角线长度
-    dis = pointDistance(polygon.envelope.lbPoint, polygon.envelope.rtPoint)
+    dis = pointDistance(polygon.extent.lowerLeft, polygon.extent.upperRight)
 
     # 将重心移到原点
-    gravity = polygon.gravity
-    partList = []
-    for part in polygon.partList:
-        p = []
+    centroid = polygon.centroid
+    polylineList = []
+    for part in polygon:
+        array = arcpy.Array()
         for pnt in part:
-            point = Point()
-            point.x = pnt.x - gravity.x
-            point.y = pnt.y - gravity.y
+            point = arcpy.Point()
+            point.X = pnt.X - centroid.X
+            point.Y = pnt.Y - centroid.Y
 
-            p.append(point)
-        partList.append(p)
+            array.append(point)
+        polygon = arcpy.Polygon(array)
+        polylineList.append(polygon)
 
-    return dis, partList
+    return dis, polylineList
 
 
 '''
@@ -183,8 +120,8 @@ def polygonCatercorner(polygon):
 
 
 def pointAzimuth(originPoint, angularPoint):
-    dx = angularPoint.x - originPoint.x
-    dy = angularPoint.y - originPoint.y
+    dx = angularPoint.X - originPoint.X
+    dy = angularPoint.Y - originPoint.Y
 
     azimuth = 0
     if dx > 0 and dy >= 0:
