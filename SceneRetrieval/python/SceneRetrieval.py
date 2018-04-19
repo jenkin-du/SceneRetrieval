@@ -138,7 +138,7 @@ if __name__ == '__main__':
         scene.md = pr.md
 
         envelopeList = [fp.envelope, lp.envelope]
-        scene.gravity, scene.envelope = mu.getEnvelopeGravity(envelopeList)
+        scene.envelope = mu.getEnvelopeGravity(envelopeList)
 
         similarSceneList.append(scene)
     # 序列化

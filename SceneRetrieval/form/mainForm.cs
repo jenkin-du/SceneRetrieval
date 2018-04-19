@@ -124,6 +124,8 @@ namespace SceneRetrieval
 
                 }
 
+                showScene(mSceneList[0]);
+
                 mMessageForm.Close();
             }
             else

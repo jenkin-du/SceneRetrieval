@@ -143,11 +143,8 @@ def getEnvelopeGravity(envelopeList):
     envelope = Envelope()
     envelope.lbPoint = lbPoint
     envelope.rtPoint = rtPoint
-    gravity = Point()
-    gravity.x = (rtPoint.x + lbPoint.x) / 2
-    gravity.y = (rtPoint.y + lbPoint.y) / 2
 
-    return gravity,envelope
+    return envelope
 
     pass
 

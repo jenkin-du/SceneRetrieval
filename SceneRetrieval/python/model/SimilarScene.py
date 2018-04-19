@@ -11,6 +11,3 @@ class SimilarScene(object):
 
     # 外包矩形
     envelope = Envelope()
-
-    # 重心坐标
-    gravity = Point()
