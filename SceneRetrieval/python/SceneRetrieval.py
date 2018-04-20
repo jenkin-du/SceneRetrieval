@@ -3,7 +3,9 @@
 
     检索场景要素
 """
-import arcpy
+from model.Time import *
+t=Time("analysis")
+t.start()
 import numpy as np
 import json
 
@@ -13,6 +15,8 @@ from model.Programme import *
 from model.MatchedPolygon import *
 from model.Scene import *
 from model.SimilarScene import *
+
+t.stop()
 
 if __name__ == '__main__':
 

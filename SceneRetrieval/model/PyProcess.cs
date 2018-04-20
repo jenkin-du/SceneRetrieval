@@ -89,7 +89,7 @@ namespace SceneRetrieval.model
                 String result = "";
                 while (!reader.EndOfStream)
                 {
-                    result += reader.ReadLine();
+                    result += reader.ReadLine() + "\n";
                 }
                 //将消息发送给主线程
                 mOutputHandler(result, exitCode);

@@ -11,18 +11,24 @@ from model.Constant import *
 
 
 # 获得多边形的顶点序列
+from model.Time import Time
+
+
 def getPolygonList(workspace, shapeName):
     """
 
     :rtype: List[Polygon]
     """
     # 多边形列表
+    readTime=Time("read "+shapeName)
+    readTime.start()
 
     # 设置工作空间
     arcpy.env.workspace = workspace
     arcpy.env.overwriteOutput = True
 
     polygonList = []  # type: list[Polygon]
+
 
     # 获得矩形的坐标点
     with arcpy.da.SearchCursor(shapeName, ["OID@", "SHAPE@"]) as cursor:
@@ -37,6 +43,7 @@ def getPolygonList(workspace, shapeName):
 
         del cursor
 
+    readTime.stop()
     return polygonList
 
 
