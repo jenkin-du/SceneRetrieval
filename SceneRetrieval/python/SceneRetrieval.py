@@ -21,8 +21,10 @@ if __name__ == '__main__':
     # 搜索的场景图层
     scenePolygons = su.getPolygonList(dataPath + "scene\\", "scene.shp")
 
+    #获得归一化的坐标和外包矩形
     for sp in scenePolygons:
         sp.uniformedPartList = mu.polygonUniformization(sp)
+        sp.uniformedEnvelope=mu.uniformedEnvelope(sp.uniformedPartList)
 
     originScene = Scene()
     originScene.polygonList = scenePolygons
@@ -146,10 +148,10 @@ if __name__ == '__main__':
 
         similarSceneList.append(scene)
 
-    # for similar in similarSceneList:
-    #     print("polygon:"),
-    #     print(similar.polygonList[0]+","+similar.polygonList[1]),
-    #     print(" md:"+str(similar.md))
+    for similar in similarSceneList:
+        print("polygon:"),
+        print(similar.polygonList[0]+","+similar.polygonList[1]),
+        print(" md:"+str(similar.md))
 
     # 序列化
     fp = open(tempPath + "data", 'w')

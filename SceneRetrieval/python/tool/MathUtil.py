@@ -3,7 +3,6 @@
 import numpy as np
 import arcpy
 
-
 # 将坐标旋转给定的角度,角度单位为°
 from model.Envelope import Envelope
 
@@ -92,6 +91,38 @@ def getEnvelope(extentList):
 
 
 '''
+    计算归一化的外包矩形
+'''
+
+
+def uniformedEnvelope(partList):
+    #
+
+    p=partList[0]
+    xMax = p.firstPoint.X
+    yMax = p.firstPoint.Y
+
+    xMin = p.firstPoint.X
+    yMin = p.firstPoint.Y
+
+    for polygon in partList:
+        for part in polygon:
+            for pnt in part:
+                if xMin > pnt.X:
+                    xMin = pnt.X
+                if xMax < pnt.X:
+                    xMax = pnt.X
+                if yMin > pnt.Y:
+                    yMin = pnt.Y
+                if yMax < pnt.Y:
+                    yMax = pnt.Y
+
+    return Envelope(xMin , yMin , xMax , yMax )
+
+    pass
+
+
+'''
     计算多边形的对角线长度,并将重心移到原点
 '''
 
@@ -100,7 +131,7 @@ def polygonUniformization(polygon, scale=1):
     # 将重心移到原点
     centroid = polygon.centroid
 
-    polylineList = []
+    polygonList = []
     for part in polygon:
         array = arcpy.Array()
         for pnt in part:
@@ -110,9 +141,9 @@ def polygonUniformization(polygon, scale=1):
 
             array.append(point)
         polygon = arcpy.Polygon(array)
-        polylineList.append(polygon)
+        polygonList.append(polygon)
 
-    return polylineList
+    return polygonList
 
 
 '''
@@ -139,3 +170,28 @@ def pointAzimuth(originPoint, angularPoint):
         azimuth = np.pi
 
     return np.rad2deg(azimuth)
+
+
+'''
+    判断其外包矩形的相似性
+'''
+
+
+def matchEnvelope(originEnvelope, retrievalEnvelope):
+    # 求归一化外包矩形的差异度
+    daw = np.abs(originEnvelope.xMax - retrievalEnvelope.xMax)
+    diw = np.abs(originEnvelope.xMin - retrievalEnvelope.xMin)
+
+    dah = np.abs(originEnvelope.yMax - retrievalEnvelope.yMax)
+    dih = np.abs(originEnvelope.yMin - retrievalEnvelope.yMin)
+
+    ow = originEnvelope.xMax - originEnvelope.xMin
+    oh = originEnvelope.yMax - originEnvelope.yMin
+
+
+    rw = retrievalEnvelope.xMax - retrievalEnvelope.xMin
+    rh = retrievalEnvelope.yMax - retrievalEnvelope.yMin
+
+    d = ((daw + diw) / (ow + rw) + (dah + dih) / (oh + rh)) / 2
+
+    return 1 - d
