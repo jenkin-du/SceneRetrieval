@@ -16,4 +16,7 @@ tempPath = os.path.dirname(os.path.dirname(
 
 
 # 单个要素匹配的精度
-precision = 0.75
+polygon_precision = 0.8
+
+# 单个要素匹配的精度
+scene_precision = 0.7

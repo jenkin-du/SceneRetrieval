@@ -59,7 +59,7 @@ if __name__ == '__main__':
                     for rp in polygons:
 
                         md, scale = su.matchPolygon(sp, rp)
-                        if md > precision:
+                        if md > polygon_precision:
                             matchingList.append(rp)
                             scaleList.append(scale)
                             matchingDegreeList.append(md)
@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 if ds != 0 and dv != 0:
                     md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
 
-                if md > precision:
+                if md > scene_precision:
                     pr.md = md
                     # 将生成的关联对加入到中的列表里
                     relationPairList.append(pr)
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         scene = SimilarScene()
         plist = [fp.oid, lp.oid]  # type:list[str]
 
-        scene.polygonList = plist
+        scene.database = plist
         scene.md = pr.md
 
         extentList = [fp.extent, lp.extent]
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
     for similar in similarSceneList:
         print("polygon:"),
-        print(similar.polygonList[0]+","+similar.polygonList[1]),
+        print(similar.database[0] + "," + similar.database[1]),
         print(" md:"+str(similar.md))
 
     # 序列化
