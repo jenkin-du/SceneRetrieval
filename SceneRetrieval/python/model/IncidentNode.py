@@ -2,10 +2,9 @@
 
 class IncidentNode(object):
     # 场景中的polygon
-    originPolygon = ""
+    oid = ""
     # 数据库中的polygon
-    databasePolygon = ""
+    did = ""
 
     # 匹配度
     md = 0
-    pass

@@ -3,8 +3,10 @@
 
     检索场景要素
 """
+
 from model.Time import *
-t=Time("analysis")
+
+t = Time("analysis")
 t.start()
 import numpy as np
 import json
@@ -15,6 +17,7 @@ from model.Programme import *
 from model.MatchedPolygon import *
 from model.Scene import *
 from model.SimilarScene import *
+from model.IncidentPair import IncidentPair, IncidentNode
 
 t.stop()
 
@@ -25,14 +28,17 @@ if __name__ == '__main__':
     # 搜索的场景图层
     scenePolygons = su.getPolygonList(dataPath + "scene\\", "scene.shp")
 
-    #获得归一化的坐标和外包矩形
-    for sp in scenePolygons:
-        sp.uniformedPartList = mu.polygonUniformization(sp)
-        sp.uniformedEnvelope=mu.uniformedEnvelope(sp.uniformedPartList)
+    # 获得归一化的坐标和外包矩形
+    for op in scenePolygons:
+        op.uniformedPartList = mu.polygonUniformization(op)
+        op.uniformedEnvelope = mu.uniformedEnvelope(op.uniformedPartList)
 
     originScene = Scene()
     originScene.polygonList = scenePolygons
     originRelationPairList = originScene.makeRelationPair()  # 原图形的关系列表
+
+    for pair in originRelationPairList:
+        print(pair)
 
     # 匹配的结果列表
     mpList = []  # type:list[MatchedPolygon] #已匹配的矩形
@@ -40,9 +46,9 @@ if __name__ == '__main__':
     workPath = dataPath
     files = os.listdir(workPath)
 
-    for sp in scenePolygons:
+    for op in scenePolygons:
         mp = MatchedPolygon()
-        mp.origin = sp
+        mp.origin = op
 
         matchingList = []
         matchingDegreeList = []
@@ -56,11 +62,11 @@ if __name__ == '__main__':
 
                     polygons = su.getPolygonList(workPath, f)  # type: list[Polygon]
 
-                    for rp in polygons:
+                    for dp in polygons:
 
-                        md, scale = su.matchPolygon(sp, rp)
+                        md, scale = su.matchPolygon(op, dp)
                         if md > polygon_precision:
-                            matchingList.append(rp)
+                            matchingList.append(dp)
                             scaleList.append(scale)
                             matchingDegreeList.append(md)
 
@@ -72,8 +78,7 @@ if __name__ == '__main__':
 
 
     # 关联对列表
-    relationPairList = []  # type:list[RelationPair]
-    # 从场景中的关联对中找出与之匹配度高的关联对
+    incidentPairList = []  # type:list[IncidentPair]
     for opr in originRelationPairList:
 
         indexF = su.indexOfMatched(mpList, opr.firstPolygon)
@@ -87,12 +92,15 @@ if __name__ == '__main__':
         scaleListF = mpList[indexF].scaleList
         scaleListL = mpList[indexL].scaleList
 
+
+
         for i in range(len(fmpList)):
             for j in range(len(lmpList)):
 
                 fp = fmpList[i]
                 lp = lmpList[j]
                 pr = RelationPair(fp, lp)
+
 
                 # 方向角的差异度
                 da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
@@ -104,8 +112,8 @@ if __name__ == '__main__':
                 av_sc = 1
                 if dsc < 0.7:
                     av_sc = (fs + ls) / 2
-                dg = np.abs(opr.getGravityDistance()  - pr.getGravityDistance()* av_sc) / (
-                        opr.getGravityDistance()  + pr.getGravityDistance()* av_sc)
+                dg = np.abs(opr.getGravityDistance() - pr.getGravityDistance() * av_sc) / (
+                        opr.getGravityDistance() + pr.getGravityDistance() * av_sc)
 
                 # 总体差异度
                 md = 0
@@ -121,6 +129,9 @@ if __name__ == '__main__':
                 # 将形状差异度也加权到最终的结果中
                 fms = dmpListF[i]
                 lms = dmpListL[j]
+
+
+
                 if lms != 1 and fms != 1:
                     ams = (1 / (1 - lms) * fms + 1 / (1 - fms) * lms) / (1 / (1 - lms) + 1 / (1 - fms))
                 else:
@@ -132,33 +143,30 @@ if __name__ == '__main__':
                     md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
 
                 if md > scene_precision:
+
                     pr.md = md
-                    # 将生成的关联对加入到中的列表里
-                    relationPairList.append(pr)
 
-    similarSceneList = []  # type:list[SimilarScene]
-    for pr in relationPairList:
-        fp = pr.firstPolygon
-        lp = pr.lastPolygon
+                    incidentPair = IncidentPair()
 
-        scene = SimilarScene()
-        plist = [fp.oid, lp.oid]  # type:list[str]
+                    firstNode = IncidentNode()
+                    lastNode = IncidentNode()
+                    firstNode.oid = opr.firstPolygon.oid
+                    lastNode.oid = opr.lastPolygon.oid
 
-        scene.database = plist
-        scene.md = pr.md
+                    firstNode.did = fp.oid
+                    lastNode.did = lp.oid
 
-        extentList = [fp.extent, lp.extent]
-        scene.envelope = mu.getEnvelope(extentList)
+                    firstNode.md = fms
+                    lastNode.md = lms
 
-        similarSceneList.append(scene)
+                    incidentPair.firstNode = firstNode
+                    incidentPair.lastNode = lastNode
 
-    for similar in similarSceneList:
-        print("polygon:"),
-        print(similar.database[0] + "," + similar.database[1]),
-        print(" md:"+str(similar.md))
+                    incidentPair.correlation = md
+                    incidentPairList.append(incidentPair)
 
     # 序列化
     fp = open(tempPath + "data", 'w')
-    json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    json.dump(incidentPairList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
     fp.close()
     pro.stop()

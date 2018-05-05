@@ -20,7 +20,7 @@ namespace SceneRetrieval
         private PyProcess mSceneRetrivalPy;
 
         //搜索的相似场景
-        List<SimilarScene> mSceneList;
+        List<IncidentPair> mIncidentPairs;
 
         //显示消息
         MessageForm mMessageForm;
@@ -44,6 +44,23 @@ namespace SceneRetrieval
             mSceneRetrivalPy.setOutputHandler(new OutputHandler(handleOutput));
 
             mMessageForm = new MessageForm();
+
+
+            String jsonString = "";
+            String line;
+            StreamReader sr = new StreamReader(Program.tempPath + "data", Encoding.Default);
+            while ((line = sr.ReadLine()) != null)
+            {
+                jsonString += line + "\n";
+            }
+            sr.Close();
+            mIncidentPairs = JsonConvert.DeserializeObject<List<IncidentPair>>(jsonString);
+
+            foreach (IncidentPair pair in mIncidentPairs)
+            {
+                Console.WriteLine(pair);
+
+            }
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
@@ -102,28 +119,28 @@ namespace SceneRetrieval
                     jsonString += line + "\n";
                 }
                 sr.Close();
-                mSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonString);
-                //排序
-                Util.sort(mSceneList);
+                mIncidentPairs = JsonConvert.DeserializeObject<List<IncidentPair>>(jsonString);
+
+                Console.WriteLine(mIncidentPairs);
 
 
-                //删除datagridview中的数据
-                 removeData();
-                //将结果显示在dataGridView中
-                DataGridViewRow row;
-                for (int i = 0; i < mSceneList.Count; i++)
-                {
-                    SimilarScene scene = mSceneList[i];
-                    List<String> polygons = scene.polygonList;
+                ////删除datagridview中的数据
+                // removeData();
+                ////将结果显示在dataGridView中
+                //DataGridViewRow row;
+                //for (int i = 0; i < mSceneList.Count; i++)
+                //{
+                //    SimilarScene scene = mSceneList[i];
+                //    List<String> polygons = scene.polygonList;
 
-                    row = new DataGridViewRow();
-                    int index = dataView.Rows.Add(row);
-                    dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
-                    dataView.Rows[index].Cells[1].Value = scene.md;
+                //    row = new DataGridViewRow();
+                //    int index = dataView.Rows.Add(row);
+                //    dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
+                //    dataView.Rows[index].Cells[1].Value = scene.md;
 
-                }
+                //}
 
-                showScene(mSceneList[0]);
+                //showScene(mSceneList[0]);
 
                 mMessageForm.Close();
             }
@@ -161,20 +178,20 @@ namespace SceneRetrieval
 
         private void dataView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            int index = dataView.CurrentRow.Index;
-            if (index < mSceneList.Count)
-            {
-                showScene(mSceneList[index]);
-            }
+            //int index = dataView.CurrentRow.Index;
+            //if (index < mSceneList.Count)
+            //{
+            //    showScene(mSceneList[index]);
+            //}
         }
 
         private void dataView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            int index = dataView.CurrentRow.Index;
-            if (index < mSceneList.Count)
-            {
-                showScene(mSceneList[index]);
-            }
+            //int index = dataView.CurrentRow.Index;
+            //if (index < mSceneList.Count)
+            //{
+            //    showScene(mSceneList[index]);
+            //}
         }
 
         /// <summary>
@@ -212,12 +229,12 @@ namespace SceneRetrieval
             double sceenScale = sceenMax / sceenMin;
 
 
-          
+
 
             float scale = 2.0f;
             model.Envelope envelope = scene.envelope;
 
-            model.Point gravity = new model.Point((envelope.xMin+envelope.xMax)/2,(envelope.yMin+envelope.yMax) /2);
+            model.Point gravity = new model.Point((envelope.xMin + envelope.xMax) / 2, (envelope.yMin + envelope.yMax) / 2);
 
             double width = envelope.xMax - envelope.xMin;
             double height = envelope.yMax - envelope.yMin;
@@ -276,4 +293,4 @@ namespace SceneRetrieval
 
         }
     }
-}   
+}

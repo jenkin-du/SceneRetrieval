@@ -48,4 +48,5 @@ class RelationPair(object):
             self._distance = mu.pointDistance(ga, gb)
         return self._distance
 
-    pass
+    def __str__(self):
+        return "firstPolygon:" + self.firstPolygon.oid + ",lastPolygon:" + self.lastPolygon.oid + ",azimuth:" + str(self.getAzimuth()) + ",gravity:" + str(self.getGravityDistance())
