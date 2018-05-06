@@ -44,6 +44,7 @@ namespace SceneRetrieval
             this.label1 = new System.Windows.Forms.Label();
             this.retrievalBtn = new System.Windows.Forms.Button();
             this.axToolbarControl1 = new ESRI.ArcGIS.Controls.AxToolbarControl();
+            this.drawBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -241,11 +242,22 @@ namespace SceneRetrieval
             this.axToolbarControl1.Size = new System.Drawing.Size(854, 28);
             this.axToolbarControl1.TabIndex = 1;
             // 
+            // drawBtn
+            // 
+            this.drawBtn.Location = new System.Drawing.Point(586, 0);
+            this.drawBtn.Name = "drawBtn";
+            this.drawBtn.Size = new System.Drawing.Size(75, 28);
+            this.drawBtn.TabIndex = 3;
+            this.drawBtn.Text = "ªÊ÷∆≥°æ∞";
+            this.drawBtn.UseVisualStyleBackColor = true;
+            this.drawBtn.Click += new System.EventHandler(this.drawBtn_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(854, 448);
+            this.Controls.Add(this.drawBtn);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.axToolbarControl1);
             this.Controls.Add(this.axLicenseControl1);
@@ -293,6 +305,7 @@ namespace SceneRetrieval
         private System.Windows.Forms.DataGridView dataView;
         private System.Windows.Forms.DataGridViewTextBoxColumn layerCN;
         private System.Windows.Forms.DataGridViewTextBoxColumn mdCN;
+        private System.Windows.Forms.Button drawBtn;
     }
 }
 

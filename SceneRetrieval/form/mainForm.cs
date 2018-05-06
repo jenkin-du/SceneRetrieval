@@ -292,5 +292,28 @@ namespace SceneRetrieval
             activeView.Refresh();
 
         }
+
+        /// <summary>
+        /// 绘制场景
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void drawBtn_Click(object sender, EventArgs e)
+        {
+            DrawSceneForm drawForm = new DrawSceneForm();
+            drawForm.FormClosed += new FormClosedEventHandler(drawFormClosed);
+            drawForm.ShowDialog();
+        }
+
+        /// <summary>
+        /// 场景画板关闭时调用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void drawFormClosed(object sender, FormClosedEventArgs e)
+        {
+            sceneMap.Extent = sceneMap.FullExtent;
+            sceneMap.ActiveView.Refresh();
+        }
     }
 }
