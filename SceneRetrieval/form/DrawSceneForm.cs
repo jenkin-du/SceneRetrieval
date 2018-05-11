@@ -31,35 +31,42 @@ namespace SceneRetrieval.form
         {
             InitializeComponent();
 
-            mMap = drawMap.Map;
-
-            pEngineEditor = new EngineEditorClass();
-            MapManager.EngineEditor = pEngineEditor;
-            pEngineEditTask = pEngineEditor as IEngineEditTask;
-            mEngineEditLayers = pEngineEditor as IEngineEditLayers;
-
-
-            mCurrentLayer = drawMap.get_Layer(0) as IFeatureLayer;
-            //设置编辑目标层
-            mEngineEditLayers.SetTargetLayer(mCurrentLayer, 0);
-
-            //获取当前编辑图层工作空间
-            IDataset pDataSet = mCurrentLayer.FeatureClass as IDataset;
-            IWorkspace pWs = pDataSet.Workspace;
-            //设置编辑模式，如果是ArcSDE采用版本模式
-            if (pWs.Type == esriWorkspaceType.esriRemoteDatabaseWorkspace)
+           try
             {
-                pEngineEditor.EditSessionMode = esriEngineEditSessionMode.esriEngineEditSessionModeVersioned;
+                mMap = drawMap.Map;
+
+                pEngineEditor = new EngineEditorClass();
+                MapManager.EngineEditor = pEngineEditor;
+                pEngineEditTask = pEngineEditor as IEngineEditTask;
+                mEngineEditLayers = pEngineEditor as IEngineEditLayers;
+
+
+                mCurrentLayer = drawMap.get_Layer(0) as IFeatureLayer;
+                //设置编辑目标层
+                mEngineEditLayers.SetTargetLayer(mCurrentLayer, 0);
+
+                //获取当前编辑图层工作空间
+                IDataset pDataSet = mCurrentLayer.FeatureClass as IDataset;
+                IWorkspace pWs = pDataSet.Workspace;
+                //设置编辑模式，如果是ArcSDE采用版本模式
+                if (pWs.Type == esriWorkspaceType.esriRemoteDatabaseWorkspace)
+                {
+                    pEngineEditor.EditSessionMode = esriEngineEditSessionMode.esriEngineEditSessionModeVersioned;
+                }
+                else
+                {
+                    pEngineEditor.EditSessionMode = esriEngineEditSessionMode.esriEngineEditSessionModeNonVersioned;
+                }
+                //设置编辑任务
+                pEngineEditTask = pEngineEditor.GetTaskByUniqueName("ControlToolsEditing_CreateNewFeatureTask");
+                pEngineEditor.CurrentTask = pEngineEditTask;// 设置编辑任务
+                pEngineEditor.EnableUndoRedo(true); //是否可以进行撤销、恢复操作
+                pEngineEditor.StartEditing(pWs, mMap); //开始编辑操作
             }
-            else
+            catch
             {
-                pEngineEditor.EditSessionMode = esriEngineEditSessionMode.esriEngineEditSessionModeNonVersioned;
+
             }
-            //设置编辑任务
-            pEngineEditTask = pEngineEditor.GetTaskByUniqueName("ControlToolsEditing_CreateNewFeatureTask");
-            pEngineEditor.CurrentTask = pEngineEditTask;// 设置编辑任务
-            pEngineEditor.EnableUndoRedo(true); //是否可以进行撤销、恢复操作
-            pEngineEditor.StartEditing(pWs, mMap); //开始编辑操作
 
         }
 

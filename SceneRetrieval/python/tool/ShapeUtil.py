@@ -51,8 +51,7 @@ def getPolygonList(workspace, shapeName):
 def matchPolygon(sourcePolygon, retrievalPolygon):
     # 先判断其外包矩形的高宽比，剔除掉外包矩形明显不相同的
     hwr_d = np.abs(sourcePolygon.hwRatio - retrievalPolygon.hwRatio)
-    rmd = 1 - hwr_d
-    if rmd > 0.5:
+    if hwr_d < whRatioDiff:
 
         # 获取归一化后的坐标
         sourcePartList = sourcePolygon.uniformedPartList
@@ -68,7 +67,7 @@ def matchPolygon(sourcePolygon, retrievalPolygon):
         #  根据其归一化的外包矩形，先大致判断其是否相交,
         emd = mu.matchEnvelope(sourcePolygon.uniformedEnvelope, retrievalEnvelope)
 
-        if emd > 0.8:
+        if emd > envelope_precision:
 
             # 构建多边形求交
             arcpy.env.workspace = dataPath

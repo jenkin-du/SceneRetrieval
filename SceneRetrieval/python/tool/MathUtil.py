@@ -98,7 +98,7 @@ def getEnvelope(extentList):
 def uniformedEnvelope(partList):
     #
 
-    p=partList[0]
+    p = partList[0]
     xMax = p.firstPoint.X
     yMax = p.firstPoint.Y
 
@@ -117,7 +117,7 @@ def uniformedEnvelope(partList):
                 if yMax < pnt.Y:
                     yMax = pnt.Y
 
-    return Envelope(xMin , yMin , xMax , yMax )
+    return Envelope(xMin, yMin, xMax, yMax)
 
     pass
 
@@ -188,10 +188,19 @@ def matchEnvelope(originEnvelope, retrievalEnvelope):
     ow = originEnvelope.xMax - originEnvelope.xMin
     oh = originEnvelope.yMax - originEnvelope.yMin
 
-
     rw = retrievalEnvelope.xMax - retrievalEnvelope.xMin
     rh = retrievalEnvelope.yMax - retrievalEnvelope.yMin
 
     d = ((daw + diw) / (ow + rw) + (dah + dih) / (oh + rh)) / 2
 
     return 1 - d
+
+
+'''
+    计算矢量余弦
+'''
+
+
+def calCosine(v1, v2):
+    return (v1[0] * v2[0] + v1[1] * v2[1]) / (
+            np.sqrt(np.square(v1[0]) + np.square(v1[1])) * np.sqrt(np.square(v2[0]) + np.square(v2[1])))

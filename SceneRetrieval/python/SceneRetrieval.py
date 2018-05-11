@@ -8,8 +8,8 @@ from model.Time import *
 
 t = Time("analysis")
 t.start()
-import numpy as np
 import json
+import numpy as np
 
 from tool import ShapeUtil as su
 from model.Constant import *
@@ -37,9 +37,6 @@ if __name__ == '__main__':
     originScene.polygonList = scenePolygons
     originRelationPairList = originScene.makeRelationPair()  # 原图形的关系列表
 
-    for pair in originRelationPairList:
-        print(pair)
-
     # 匹配的结果列表
     mpList = []  # type:list[MatchedPolygon] #已匹配的矩形
     # 搜索数据目录下的矢量数据
@@ -61,21 +58,22 @@ if __name__ == '__main__':
                 if desc.shapeType == 'Polygon':
 
                     polygons = su.getPolygonList(workPath, f)  # type: list[Polygon]
-
+                    print(op.oid + ": ")
                     for dp in polygons:
-
                         md, scale = su.matchPolygon(op, dp)
                         if md > polygon_precision:
                             matchingList.append(dp)
                             scaleList.append(scale)
                             matchingDegreeList.append(md)
 
+                            print("     " + dp.oid + ": "),
+                            print("md:" + str(md))
+
         mp.matchingList = matchingList
         mp.mdList = matchingDegreeList
         mp.scaleList = scaleList
 
         mpList.append(mp)
-
 
     # 关联对列表
     incidentPairList = []  # type:list[IncidentPair]
@@ -92,18 +90,32 @@ if __name__ == '__main__':
         scaleListF = mpList[indexF].scaleList
         scaleListL = mpList[indexL].scaleList
 
+        # # 查询场景的空间矢量
+        # originVector = [opr.getAzimuth(), opr.getGravityDistance()]
 
-
+        print("opr:" + opr.firstPolygon.oid + "," + opr.lastPolygon.oid)
+        print("azimuth:" + str(opr.getAzimuth())),
+        print("gravity:"+str(opr.getGravityDistance()))
         for i in range(len(fmpList)):
             for j in range(len(lmpList)):
-
                 fp = fmpList[i]
                 lp = lmpList[j]
                 pr = RelationPair(fp, lp)
 
+                # # 空间数据库中的空间矢量
+                # retrievalVector = [pr.getAzimuth(), pr.getGravityDistance()]
+                # # 求取矢量余弦
+                #
+                # cosine = mu.calCosine(originVector, retrievalVector)
+                # print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
+                # print("     azimuth:" + str(pr.getAzimuth())),
+                # print("gravity:" + str(pr.getGravityDistance()))
+                # print("     cos:"+str(cosine))
+                # print("------------------------------")
 
                 # 方向角的差异度
-                da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
+                # da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
+                da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / 360
                 # 重心距离的差异
                 # 考虑缩放相似性
                 fs = scaleListF[i]
@@ -117,6 +129,8 @@ if __name__ == '__main__':
 
                 # 总体差异度
                 md = 0
+
+
                 if da != 0 and dg != 0:
                     md = (1 / dg * (1 - da) + 1 / da * (1 - dg)) / (1 / da + 1 / dg)
                 if da == 0 and dg == 0:
@@ -143,8 +157,14 @@ if __name__ == '__main__':
                     md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
 
                 if md > scene_precision:
-
                     pr.md = md
+
+                    print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
+                    print("     da:" + str(da) + ",dg:" + str(dg))
+                    print("     azimuth:" + str(pr.getAzimuth()))
+                    print("     av_sc:"+str(av_sc))
+                    print("     md:"+str(md))
+                    print("------------------------------")
 
                     incidentPair = IncidentPair()
 
@@ -156,8 +176,8 @@ if __name__ == '__main__':
                     firstNode.did = fp.oid
                     lastNode.did = lp.oid
 
-                    firstNode.md = fms
-                    lastNode.md = lms
+                    firstNode.md = dmpListF[i]
+                    lastNode.md = dmpListL[j]
 
                     incidentPair.firstNode = firstNode
                     incidentPair.lastNode = lastNode
