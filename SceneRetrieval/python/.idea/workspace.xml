@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1f4b6557-df84-45eb-a5a3-d817491c0e61" name="Default" comment="code">
-      <change beforePath="$PROJECT_DIR$/../form/mainForm.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../form/mainForm.cs" afterDir="false" />
+    <list default="true" id="1f4b6557-df84-45eb-a5a3-d817491c0e61" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/tool/MathUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/tool/MathUtil.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -12,17 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SceneRetrieval.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SceneRetrieval.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-292">
-              <caret line="105" column="2" lean-forward="true" selection-start-line="105" selection-start-column="2" selection-end-line="105" selection-end-column="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -124,10 +114,10 @@
         <option value="$PROJECT_DIR$/model/Constant.py" />
         <option value="$PROJECT_DIR$/model/IncidentGraph.py" />
         <option value="$PROJECT_DIR$/model/Node.py" />
-        <option value="$PROJECT_DIR$/tool/MathUtil.py" />
         <option value="$PROJECT_DIR$/model/Graph.py" />
-        <option value="$PROJECT_DIR$/SceneRetrieval.py" />
         <option value="$PROJECT_DIR$/model/SimilarScene.py" />
+        <option value="$PROJECT_DIR$/SceneRetrieval.py" />
+        <option value="$PROJECT_DIR$/tool/MathUtil.py" />
       </list>
     </option>
   </component>
@@ -537,7 +527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1526112113516</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="tidy">
+      <created>1526114928885</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1526114928885</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -551,7 +548,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18080357" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3289689" />
@@ -633,11 +629,11 @@
     <MESSAGE value="改变了算法，效率更高，正确率更高" />
     <MESSAGE value="change" />
     <MESSAGE value="今天完成了场景相似性的判断" />
-    <MESSAGE value="tidy" />
     <MESSAGE value="improve" />
     <MESSAGE value="完成了融合多个要素的场景查询" />
     <MESSAGE value="code" />
-    <option name="LAST_COMMIT_MESSAGE" value="code" />
+    <MESSAGE value="tidy" />
+    <option name="LAST_COMMIT_MESSAGE" value="tidy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -870,25 +866,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tool/ShapeUtil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="17" column="7" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/IncidentGraph.py" />
     <entry file="file://$PROJECT_DIR$/model/IncidentNode.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tool/MathUtil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4047">
-          <caret line="217" column="16" selection-start-line="217" selection-start-column="16" selection-end-line="217" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -945,10 +927,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tool/MathUtil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2957">
+          <caret line="199" column="3" lean-forward="true" selection-start-line="199" selection-start-column="3" selection-end-line="199" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tool/ShapeUtil.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1128">
+          <caret line="41" column="39" lean-forward="true" selection-start-line="41" selection-start-column="39" selection-end-line="41" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SceneRetrieval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-292">
-          <caret line="105" column="2" lean-forward="true" selection-start-line="105" selection-start-column="2" selection-end-line="105" selection-end-column="2" />
+        <state relative-caret-position="145">
+          <caret line="59" column="19" selection-start-line="59" selection-start-column="19" selection-end-line="59" selection-end-column="19" />
         </state>
       </provider>
     </entry>

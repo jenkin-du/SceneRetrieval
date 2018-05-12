@@ -45,13 +45,21 @@ namespace SceneRetrieval
 
             mMessageForm = new MessageForm();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
         {
             statusLabel.Text = string.Format("{0} m, {1} m", e.mapX.ToString("#######.###"), e.mapY.ToString("#######.###"));
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void axMap_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
             if (axMap.MousePointer == esriControlsMousePointer.esriPointerPan && e.button == 1)
@@ -65,7 +73,11 @@ namespace SceneRetrieval
                 axMap.Pan();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void axMap_OnMouseUp(object sender, IMapControlEvents2_OnMouseUpEvent e)
         {
 
@@ -73,7 +85,11 @@ namespace SceneRetrieval
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void retrievalBtn_Click(object sender, EventArgs e)
         {
             mSceneRetrivalPy.startProcess();
@@ -159,6 +175,11 @@ namespace SceneRetrieval
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             int index = dataView.CurrentRow.Index;
@@ -167,7 +188,11 @@ namespace SceneRetrieval
                 showScene(mSceneList[index]);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             int index = dataView.CurrentRow.Index;
@@ -204,73 +229,6 @@ namespace SceneRetrieval
             }
             //¸ßÁÁ
             IActiveView activeView = axMap.Map as IActiveView;
-            //IEnvelope extent = activeView.Extent;
-            //double sceenWidth = extent.Width;
-            //double sceenHeight = extent.Height;
-            //double sceenMin = sceenWidth > sceenHeight ? sceenHeight : sceenWidth;
-            //double sceenMax = sceenWidth < sceenHeight ? sceenHeight : sceenWidth;
-            //double sceenScale = sceenMax / sceenMin;
-
-
-
-
-            //float scale = 2.0f;
-            //model.Envelope envelope = scene.envelope;
-
-            //model.Point gravity = new model.Point((envelope.xMin + envelope.xMax) / 2, (envelope.yMin + envelope.yMax) / 2);
-
-            //double width = envelope.xMax - envelope.xMin;
-            //double height = envelope.yMax - envelope.yMin;
-            //double max = width > height ? width : height;
-
-            //if (sceenHeight == sceenMin)
-            //{
-            //    ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
-            //    rt.X = gravity.x + max * sceenScale * scale / 2;
-            //    rt.Y = gravity.y + max * scale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
-            //    lb.X = gravity.x - max * sceenScale * scale / 2;
-            //    lb.Y = gravity.y - max * scale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
-            //    rb.X = gravity.x + max * sceenScale * scale / 2;
-            //    rb.Y = gravity.y - max * scale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
-            //    lt.X = gravity.x - max * sceenScale * scale / 2;
-            //    lt.Y = gravity.y + max * scale / 2;
-
-            //    extent.LowerLeft = lb;
-            //    extent.UpperRight = rt;
-            //    extent.UpperLeft = lt;
-            //    extent.LowerRight = rb;
-            //}
-            //else
-            //{
-            //    ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
-            //    rt.X = gravity.x + max / 2;
-            //    rt.Y = gravity.y + max * sceenScale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
-            //    lb.X = gravity.x - max / 2;
-            //    lb.Y = gravity.y - max * sceenScale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
-            //    rb.X = gravity.x + max * scale / 2;
-            //    rb.Y = gravity.y - max * sceenScale * scale / 2;
-
-            //    ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
-            //    lt.X = gravity.x - max * scale / 2;
-            //    lt.Y = gravity.y + max * sceenScale * scale / 2;
-
-            //    extent.LowerLeft = lb;
-            //    extent.UpperRight = rt;
-            //    extent.UpperLeft = lt;
-            //    extent.LowerRight = rb;
-            //}
-
-            //activeView.Extent = extent;
             //Ë¢ÐÂ
             activeView.Refresh();
 
