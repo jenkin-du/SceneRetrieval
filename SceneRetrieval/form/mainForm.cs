@@ -44,35 +44,6 @@ namespace SceneRetrieval
             mSceneRetrivalPy.setOutputHandler(new OutputHandler(handleOutput));
 
             mMessageForm = new MessageForm();
-
-
-            String jsonString = "";
-            String line;
-            StreamReader sr = new StreamReader(Program.tempPath + "data", Encoding.Default);
-            while ((line = sr.ReadLine()) != null)
-            {
-                jsonString += line + "\n";
-            }
-            sr.Close();
-            mSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonString);
-
-            //删除datagridview中的数据
-            removeData();
-            //将结果显示在dataGridView中
-            DataGridViewRow row;
-            for (int i = 0; i < mSceneList.Count; i++)
-            {
-                SimilarScene scene = mSceneList[i];
-                List<String> polygons = scene.polygonList;
-
-                row = new DataGridViewRow();
-                int index = dataView.Rows.Add(row);
-                dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
-                dataView.Rows[index].Cells[1].Value = scene.md;
-
-            }
-
-            showScene(mSceneList[0]);
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
@@ -133,26 +104,26 @@ namespace SceneRetrieval
                 sr.Close();
                 mSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonString);
 
-                Console.WriteLine(mSceneList);
+                //排序
+                Util.sort(mSceneList);
 
+                //删除datagridview中的数据
+                removeData();
+                //将结果显示在dataGridView中
+                DataGridViewRow row;
+                for (int i = 0; i < mSceneList.Count; i++)
+                {
+                    SimilarScene scene = mSceneList[i];
+                    List<String> polygons = scene.polygonList;
 
-                ////删除datagridview中的数据
-                // removeData();
-                ////将结果显示在dataGridView中
-                //DataGridViewRow row;
-                //for (int i = 0; i < mSceneList.Count; i++)
-                //{
-                //    SimilarScene scene = mSceneList[i];
-                //    List<String> polygons = scene.polygonList;
+                    row = new DataGridViewRow();
+                    int index = dataView.Rows.Add(row);
+                    dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
+                    dataView.Rows[index].Cells[1].Value = scene.md;
 
-                //    row = new DataGridViewRow();
-                //    int index = dataView.Rows.Add(row);
-                //    dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
-                //    dataView.Rows[index].Cells[1].Value = scene.md;
+                }
 
-                //}
-
-                //showScene(mSceneList[0]);
+                showScene(mSceneList[0]);
 
                 mMessageForm.Close();
             }
