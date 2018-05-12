@@ -20,7 +20,7 @@ namespace SceneRetrieval
         private PyProcess mSceneRetrivalPy;
 
         //搜索的相似场景
-        List<IncidentPair> mIncidentPairs;
+        List<SimilarScene> mSceneList;
 
         //显示消息
         MessageForm mMessageForm;
@@ -54,13 +54,25 @@ namespace SceneRetrieval
                 jsonString += line + "\n";
             }
             sr.Close();
-            mIncidentPairs = JsonConvert.DeserializeObject<List<IncidentPair>>(jsonString);
+            mSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonString);
 
-            foreach (IncidentPair pair in mIncidentPairs)
+            //删除datagridview中的数据
+            removeData();
+            //将结果显示在dataGridView中
+            DataGridViewRow row;
+            for (int i = 0; i < mSceneList.Count; i++)
             {
-                Console.WriteLine(pair);
+                SimilarScene scene = mSceneList[i];
+                List<String> polygons = scene.polygonList;
+
+                row = new DataGridViewRow();
+                int index = dataView.Rows.Add(row);
+                dataView.Rows[index].Cells[0].Value = polygons[0].Split('_')[0];
+                dataView.Rows[index].Cells[1].Value = scene.md;
 
             }
+
+            showScene(mSceneList[0]);
         }
 
         private void axMap_OnMouseMove(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseMoveEvent e)
@@ -119,9 +131,9 @@ namespace SceneRetrieval
                     jsonString += line + "\n";
                 }
                 sr.Close();
-                mIncidentPairs = JsonConvert.DeserializeObject<List<IncidentPair>>(jsonString);
+                mSceneList = JsonConvert.DeserializeObject<List<SimilarScene>>(jsonString);
 
-                Console.WriteLine(mIncidentPairs);
+                Console.WriteLine(mSceneList);
 
 
                 ////删除datagridview中的数据
@@ -178,20 +190,20 @@ namespace SceneRetrieval
 
         private void dataView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            //int index = dataView.CurrentRow.Index;
-            //if (index < mSceneList.Count)
-            //{
-            //    showScene(mSceneList[index]);
-            //}
+            int index = dataView.CurrentRow.Index;
+            if (index < mSceneList.Count)
+            {
+                showScene(mSceneList[index]);
+            }
         }
 
         private void dataView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //int index = dataView.CurrentRow.Index;
-            //if (index < mSceneList.Count)
-            //{
-            //    showScene(mSceneList[index]);
-            //}
+            int index = dataView.CurrentRow.Index;
+            if (index < mSceneList.Count)
+            {
+                showScene(mSceneList[index]);
+            }
         }
 
         /// <summary>
@@ -221,73 +233,73 @@ namespace SceneRetrieval
             }
             //高亮
             IActiveView activeView = axMap.Map as IActiveView;
-            IEnvelope extent = activeView.Extent;
-            double sceenWidth = extent.Width;
-            double sceenHeight = extent.Height;
-            double sceenMin = sceenWidth > sceenHeight ? sceenHeight : sceenWidth;
-            double sceenMax = sceenWidth < sceenHeight ? sceenHeight : sceenWidth;
-            double sceenScale = sceenMax / sceenMin;
+            //IEnvelope extent = activeView.Extent;
+            //double sceenWidth = extent.Width;
+            //double sceenHeight = extent.Height;
+            //double sceenMin = sceenWidth > sceenHeight ? sceenHeight : sceenWidth;
+            //double sceenMax = sceenWidth < sceenHeight ? sceenHeight : sceenWidth;
+            //double sceenScale = sceenMax / sceenMin;
 
 
 
 
-            float scale = 2.0f;
-            model.Envelope envelope = scene.envelope;
+            //float scale = 2.0f;
+            //model.Envelope envelope = scene.envelope;
 
-            model.Point gravity = new model.Point((envelope.xMin + envelope.xMax) / 2, (envelope.yMin + envelope.yMax) / 2);
+            //model.Point gravity = new model.Point((envelope.xMin + envelope.xMax) / 2, (envelope.yMin + envelope.yMax) / 2);
 
-            double width = envelope.xMax - envelope.xMin;
-            double height = envelope.yMax - envelope.yMin;
-            double max = width > height ? width : height;
+            //double width = envelope.xMax - envelope.xMin;
+            //double height = envelope.yMax - envelope.yMin;
+            //double max = width > height ? width : height;
 
-            if (sceenHeight == sceenMin)
-            {
-                ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
-                rt.X = gravity.x + max * sceenScale * scale / 2;
-                rt.Y = gravity.y + max * scale / 2;
+            //if (sceenHeight == sceenMin)
+            //{
+            //    ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
+            //    rt.X = gravity.x + max * sceenScale * scale / 2;
+            //    rt.Y = gravity.y + max * scale / 2;
 
-                ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
-                lb.X = gravity.x - max * sceenScale * scale / 2;
-                lb.Y = gravity.y - max * scale / 2;
+            //    ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
+            //    lb.X = gravity.x - max * sceenScale * scale / 2;
+            //    lb.Y = gravity.y - max * scale / 2;
 
-                ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
-                rb.X = gravity.x + max * sceenScale * scale / 2;
-                rb.Y = gravity.y - max * scale / 2;
+            //    ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
+            //    rb.X = gravity.x + max * sceenScale * scale / 2;
+            //    rb.Y = gravity.y - max * scale / 2;
 
-                ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
-                lt.X = gravity.x - max * sceenScale * scale / 2;
-                lt.Y = gravity.y + max * scale / 2;
+            //    ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
+            //    lt.X = gravity.x - max * sceenScale * scale / 2;
+            //    lt.Y = gravity.y + max * scale / 2;
 
-                extent.LowerLeft = lb;
-                extent.UpperRight = rt;
-                extent.UpperLeft = lt;
-                extent.LowerRight = rb;
-            }
-            else
-            {
-                ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
-                rt.X = gravity.x + max / 2;
-                rt.Y = gravity.y + max * sceenScale / 2;
+            //    extent.LowerLeft = lb;
+            //    extent.UpperRight = rt;
+            //    extent.UpperLeft = lt;
+            //    extent.LowerRight = rb;
+            //}
+            //else
+            //{
+            //    ESRI.ArcGIS.Geometry.Point rt = new ESRI.ArcGIS.Geometry.Point();
+            //    rt.X = gravity.x + max / 2;
+            //    rt.Y = gravity.y + max * sceenScale / 2;
 
-                ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
-                lb.X = gravity.x - max / 2;
-                lb.Y = gravity.y - max * sceenScale / 2;
+            //    ESRI.ArcGIS.Geometry.Point lb = new ESRI.ArcGIS.Geometry.Point();
+            //    lb.X = gravity.x - max / 2;
+            //    lb.Y = gravity.y - max * sceenScale / 2;
 
-                ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
-                rb.X = gravity.x + max * scale / 2;
-                rb.Y = gravity.y - max * sceenScale * scale / 2;
+            //    ESRI.ArcGIS.Geometry.Point rb = new ESRI.ArcGIS.Geometry.Point();
+            //    rb.X = gravity.x + max * scale / 2;
+            //    rb.Y = gravity.y - max * sceenScale * scale / 2;
 
-                ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
-                lt.X = gravity.x - max * scale / 2;
-                lt.Y = gravity.y + max * sceenScale * scale / 2;
+            //    ESRI.ArcGIS.Geometry.Point lt = new ESRI.ArcGIS.Geometry.Point();
+            //    lt.X = gravity.x - max * scale / 2;
+            //    lt.Y = gravity.y + max * sceenScale * scale / 2;
 
-                extent.LowerLeft = lb;
-                extent.UpperRight = rt;
-                extent.UpperLeft = lt;
-                extent.LowerRight = rb;
-            }
+            //    extent.LowerLeft = lb;
+            //    extent.UpperRight = rt;
+            //    extent.UpperLeft = lt;
+            //    extent.LowerRight = rb;
+            //}
 
-            activeView.Extent = extent;
+            //activeView.Extent = extent;
             //刷新
             activeView.Refresh();
 

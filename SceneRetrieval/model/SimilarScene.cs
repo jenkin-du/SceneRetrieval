@@ -9,15 +9,22 @@ namespace SceneRetrieval.model
     class SimilarScene
     {
         //找到的相似场景中的polygon的id
-        public List<String> polygonList;
+        private List<String> polygonList;
         //匹配度
         public float md = 0;
 
-        //外接矩形
-        public Envelope envelope;
-        
 
+        public List<string> PolygonList
+        {
+            get
+            {
+                return polygonList;
+            }
 
-   
+            set
+            {
+                polygonList = value;
+            }
+        }
     }
 }
