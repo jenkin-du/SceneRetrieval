@@ -196,15 +196,6 @@ def matchEnvelope(originEnvelope, retrievalEnvelope):
     return 1 - d
 
 
-'''
-    计算矢量余弦
-'''
-
-
-def calCosine(v1, v2):
-    return (v1[0] * v2[0] + v1[1] * v2[1]) / (
-            np.sqrt(np.square(v1[0]) + np.square(v1[1])) * np.sqrt(np.square(v2[0]) + np.square(v2[1])))
-
 
 '''
     contains
