@@ -16,7 +16,6 @@ from model.Constant import *
 from model.Programme import *
 from model.MatchedPolygon import *
 from model.Scene import *
-from model.SimilarScene import *
 from model.IncidentPair import *
 from model.Graph import *
 
@@ -67,9 +66,6 @@ if __name__ == '__main__':
                             scaleList.append(scale)
                             matchingDegreeList.append(md)
 
-                            print("     " + dp.oid + ": "),
-                            print("md:" + str(md))
-
         mp.matchingList = matchingList
         mp.mdList = matchingDegreeList
         mp.scaleList = scaleList
@@ -91,31 +87,13 @@ if __name__ == '__main__':
         scaleListF = mpList[indexF].scaleList
         scaleListL = mpList[indexL].scaleList
 
-        # # 查询场景的空间矢量
-        # originVector = [opr.getAzimuth(), opr.getGravityDistance()]
-
-        # print("opr:" + opr.firstPolygon.oid + "," + opr.lastPolygon.oid)
-        # print("azimuth:" + str(opr.getAzimuth())),
-        # print("gravity:"+str(opr.getGravityDistance()))
         for i in range(len(fmpList)):
             for j in range(len(lmpList)):
                 fp = fmpList[i]
                 lp = lmpList[j]
                 pr = RelationPair(fp, lp)
 
-                # # 空间数据库中的空间矢量
-                # retrievalVector = [pr.getAzimuth(), pr.getGravityDistance()]
-                # # 求取矢量余弦
-                #
-                # cosine = mu.calCosine(originVector, retrievalVector)
-                # print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
-                # print("     azimuth:" + str(pr.getAzimuth())),
-                # print("gravity:" + str(pr.getGravityDistance()))
-                # print("     cos:"+str(cosine))
-                # print("------------------------------")
-
                 # 方向角的差异度
-                # da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / (opr.getAzimuth() + pr.getAzimuth())
                 da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / 360
                 # 重心距离的差异
                 # 考虑缩放相似性
@@ -157,36 +135,41 @@ if __name__ == '__main__':
                 if md > scene_precision:
                     pr.md = md
 
-                    # print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
-                    # print("     da:" + str(da) + ",dg:" + str(dg))
-                    # print("     azimuth:" + str(pr.getAzimuth()))
-                    # print("     av_sc:"+str(av_sc))
-                    # print("     md:"+str(md))
-                    # print("------------------------------")
-
+                    # 组成关联对
                     incidentPair = IncidentPair()
 
                     firstNode = IncidentNode()
                     lastNode = IncidentNode()
+                    # 设置查询场景
                     firstNode.oid = opr.firstPolygon.oid
                     lastNode.oid = opr.lastPolygon.oid
-
+                    # 设置数据
                     firstNode.did = fp.oid
                     lastNode.did = lp.oid
-
+                    # 设置匹配都
                     firstNode.md = dmpListF[i]
                     lastNode.md = dmpListL[j]
-
+                    # 生成关联对
                     incidentPair.firstNode = firstNode
                     incidentPair.lastNode = lastNode
-
+                    # 空间关系匹配度
                     incidentPair.correlation = md
+
+                    # 加入关联对列表
                     incidentPairList.append(incidentPair)
 
     # 组成关联图
     graph = Graph(incidentPairList, len(scenePolygons))
+    # 寻找场景
+    similarSceneList = graph.findScene
+
+    for similarScene in similarSceneList:
+        polygons = similarScene.polygonList
+        for polygon in polygons:
+            print(polygon),
+        print("md:" + str(similarScene.md))
     # 序列化
-    # fp = open(tempPath + "data", 'w')
-    # json.dump(incidentPairList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    # fp.close()
-    # pro.stop()
+    fp = open(tempPath + "data", 'w')
+    json.dump(similarSceneList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    fp.close()
+    pro.stop()
