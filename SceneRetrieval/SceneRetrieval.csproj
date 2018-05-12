@@ -190,8 +190,10 @@
       <DependentUpon>MessageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="model\Envelope.cs" />
+    <Compile Include="model\Graph.cs" />
     <Compile Include="model\IncidentNode.cs" />
     <Compile Include="model\IncidentPair.cs" />
+    <Compile Include="model\Node.cs" />
     <Compile Include="model\Point.cs" />
     <Compile Include="model\PyArgument.cs" />
     <Compile Include="model\SimilarScene.cs" />

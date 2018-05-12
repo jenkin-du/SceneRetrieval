@@ -17,7 +17,8 @@ from model.Programme import *
 from model.MatchedPolygon import *
 from model.Scene import *
 from model.SimilarScene import *
-from model.IncidentPair import IncidentPair, IncidentNode
+from model.IncidentPair import *
+from model.Graph import *
 
 t.stop()
 
@@ -93,9 +94,9 @@ if __name__ == '__main__':
         # # 查询场景的空间矢量
         # originVector = [opr.getAzimuth(), opr.getGravityDistance()]
 
-        print("opr:" + opr.firstPolygon.oid + "," + opr.lastPolygon.oid)
-        print("azimuth:" + str(opr.getAzimuth())),
-        print("gravity:"+str(opr.getGravityDistance()))
+        # print("opr:" + opr.firstPolygon.oid + "," + opr.lastPolygon.oid)
+        # print("azimuth:" + str(opr.getAzimuth())),
+        # print("gravity:"+str(opr.getGravityDistance()))
         for i in range(len(fmpList)):
             for j in range(len(lmpList)):
                 fp = fmpList[i]
@@ -130,7 +131,6 @@ if __name__ == '__main__':
                 # 总体差异度
                 md = 0
 
-
                 if da != 0 and dg != 0:
                     md = (1 / dg * (1 - da) + 1 / da * (1 - dg)) / (1 / da + 1 / dg)
                 if da == 0 and dg == 0:
@@ -143,8 +143,6 @@ if __name__ == '__main__':
                 # 将形状差异度也加权到最终的结果中
                 fms = dmpListF[i]
                 lms = dmpListL[j]
-
-
 
                 if lms != 1 and fms != 1:
                     ams = (1 / (1 - lms) * fms + 1 / (1 - fms) * lms) / (1 / (1 - lms) + 1 / (1 - fms))
@@ -159,12 +157,12 @@ if __name__ == '__main__':
                 if md > scene_precision:
                     pr.md = md
 
-                    print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
-                    print("     da:" + str(da) + ",dg:" + str(dg))
-                    print("     azimuth:" + str(pr.getAzimuth()))
-                    print("     av_sc:"+str(av_sc))
-                    print("     md:"+str(md))
-                    print("------------------------------")
+                    # print("     pr:" + pr.firstPolygon.oid + "," + pr.lastPolygon.oid)
+                    # print("     da:" + str(da) + ",dg:" + str(dg))
+                    # print("     azimuth:" + str(pr.getAzimuth()))
+                    # print("     av_sc:"+str(av_sc))
+                    # print("     md:"+str(md))
+                    # print("------------------------------")
 
                     incidentPair = IncidentPair()
 
@@ -185,8 +183,10 @@ if __name__ == '__main__':
                     incidentPair.correlation = md
                     incidentPairList.append(incidentPair)
 
+    # 组成关联图
+    graph = Graph(incidentPairList, len(scenePolygons))
     # 序列化
-    fp = open(tempPath + "data", 'w')
-    json.dump(incidentPairList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    fp.close()
-    pro.stop()
+    # fp = open(tempPath + "data", 'w')
+    # json.dump(incidentPairList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    # fp.close()
+    # pro.stop()

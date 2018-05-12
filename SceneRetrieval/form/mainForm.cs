@@ -69,7 +69,7 @@ namespace SceneRetrieval
 
         }
 
-        private void axMap_OnMouseDown(object sender, ESRI.ArcGIS.Controls.IMapControlEvents2_OnMouseDownEvent e)
+        private void axMap_OnMouseDown(object sender, IMapControlEvents2_OnMouseDownEvent e)
         {
             if (axMap.MousePointer == esriControlsMousePointer.esriPointerPan && e.button == 1)
             {

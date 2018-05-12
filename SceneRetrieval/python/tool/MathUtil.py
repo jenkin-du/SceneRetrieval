@@ -204,3 +204,15 @@ def matchEnvelope(originEnvelope, retrievalEnvelope):
 def calCosine(v1, v2):
     return (v1[0] * v2[0] + v1[1] * v2[1]) / (
             np.sqrt(np.square(v1[0]) + np.square(v1[1])) * np.sqrt(np.square(v2[0]) + np.square(v2[1])))
+
+
+'''
+    contains
+'''
+
+
+def contains(node, nodes):
+    for n in nodes:
+        if n.id == node.id:
+            return True
+    return False
