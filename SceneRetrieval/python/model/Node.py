@@ -9,4 +9,4 @@ class Node(object):
     id = ""
 
     # 边
-    adges = [] # type:list[list[float]]
+    edges = [] # type:list[list[float]]

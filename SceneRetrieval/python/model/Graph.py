@@ -4,9 +4,9 @@
     图
 """
 
-from Node import *
 import tool.MathUtil as mu
 from model.Node import Node
+from model.SimilarScene import *
 
 
 class Graph(object):
@@ -25,50 +25,50 @@ class Graph(object):
         # 添加节点
         for incidentPair in incidentPairList:
             #
-            foid = incidentPair.firstNode.oid
-            fdid = incidentPair.firstNode.did
+            fo_id = incidentPair.firstNode.oid
+            fd_id = incidentPair.firstNode.did
 
-            index = int(foid.split('_')[1])
+            index = int(fo_id.split('_')[1])
             node = Node()
-            node.id = fdid
+            node.id = fd_id
             if not mu.contains(node, self.nodesList[index]):
                 self.nodesList[index].append(node)
 
             #
-            loid = incidentPair.lastNode.oid
-            ldid = incidentPair.lastNode.did
+            lo_id = incidentPair.lastNode.oid
+            ld_id = incidentPair.lastNode.did
 
-            index = int(loid.split('_')[1])
+            index = int(lo_id.split('_')[1])
             node = Node()
-            node.id = ldid
+            node.id = ld_id
             if not mu.contains(node, self.nodesList[index]):
                 self.nodesList[index].append(node)
 
         # 声明边
         for incidentPair in incidentPairList:
 
-            foid = incidentPair.firstNode.oid
-            index_f = int(foid.split('_')[1])
+            fo_id = incidentPair.firstNode.oid
+            index_f = int(fo_id.split('_')[1])
 
-            loid = incidentPair.lastNode.oid
-            index_l = int(loid.split('_')[1])
+            lo_id = incidentPair.lastNode.oid
+            index_l = int(lo_id.split('_')[1])
 
             if index_f - index_l == -1:
 
                 nodes = self.nodesList[index_f]  # type: list[Node]
                 for node in nodes:
-                    node.adges = [0 for x in range(len(self.nodesList[index_l]))]
+                    node.edges = [0 for x in range(len(self.nodesList[index_l]))]
 
         # 添加边
         for incidentPair in incidentPairList:
 
-            foid = incidentPair.firstNode.oid
-            fdid = incidentPair.firstNode.did
-            index_fo = int(foid.split('_')[1])
+            fo_id = incidentPair.firstNode.oid
+            fd_id = incidentPair.firstNode.did
+            index_fo = int(fo_id.split('_')[1])
 
-            loid = incidentPair.lastNode.oid
-            ldid = incidentPair.lastNode.did
-            index_lo = int(loid.split('_')[1])
+            lo_id = incidentPair.lastNode.oid
+            ld_id = incidentPair.lastNode.did
+            index_lo = int(lo_id.split('_')[1])
 
             if index_fo - index_lo == -1:
                 firstNodes = self.nodesList[index_fo]
@@ -76,15 +76,15 @@ class Graph(object):
 
                 index_fd = -1
                 for i in range(len(firstNodes)):
-                    if firstNodes[i].id == fdid:
+                    if firstNodes[i].id == fd_id:
                         index_fd = i
 
                 index_ld = -1
                 for i in range(len(lastNodes)):
-                    if lastNodes[i].id == ldid:
+                    if lastNodes[i].id == ld_id:
                         index_ld = i
 
-                self.nodesList[index_fo][index_fd].adges[index_ld] = incidentPair.correlation
+                self.nodesList[index_fo][index_fd].edges[index_ld] = incidentPair.correlation
 
         # for nodes in self.nodesList:
         #     for node in nodes:
@@ -94,3 +94,44 @@ class Graph(object):
         #         for edge in node.adges:
         #             print(edge),
         #     print("")
+
+    '''
+        寻找相似场景
+    '''
+
+    @property
+    def findScene(self):
+
+        similarSceneList = []  # type:list[SimilarScene]
+
+        firstNodes = self.nodesList[0]
+        for node in firstNodes:
+
+            polygonList = [node.id]
+            mdList = []
+
+            k = 1
+            while k < len(self.nodesList):
+
+                md = node.edges[0]
+                index = 0
+                for i in range(len(node.edges)):
+                    if node.edges[i] > md:
+                        index = i
+                        md = node.edges[i]
+
+                nextNode = self.nodesList[k][index]
+                polygonList.append(nextNode.id)
+                mdList.append(md)
+
+                node = nextNode
+                k += 1
+
+            similarScene = SimilarScene()
+            similarScene.polygonList = polygonList
+            for md in mdList:  # type: list[float]
+                similarScene.md += md / len(mdList)
+
+            similarSceneList.append(similarScene)
+
+        return similarSceneList
