@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
         mpList.append(mp)
 
-    # 关联对列表
+    # 生成关联对列表
     incidentPairList = []  # type:list[IncidentPair]
     for opr in originRelationPairList:
 
