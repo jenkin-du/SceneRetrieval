@@ -5,6 +5,7 @@
 """
 
 import tool.MathUtil as mu
+from model.Constant import scene_precision
 from model.Node import Node
 from model.SimilarScene import *
 
@@ -86,14 +87,14 @@ class Graph(object):
 
                 self.nodesList[index_fo][index_fd].edges[index_ld] = incidentPair.correlation
 
-        # for nodes in self.nodesList:
-        #     for node in nodes:
-        #         print("id:" + node.id),
-        #     print("")
-        #     for node in nodes:
-        #         for edge in node.adges:
-        #             print(edge),
-        #     print("")
+        for nodes in self.nodesList:
+            for node in nodes:
+                print("id:" + node.id),
+            print("")
+            for node in nodes:
+                for edge in node.edges:
+                    print(edge),
+            print("")
 
     '''
         寻找相似场景
@@ -132,6 +133,7 @@ class Graph(object):
             for md in mdList:  # type: list[float]
                 similarScene.md += md / len(mdList)
 
-            similarSceneList.append(similarScene)
+            if similarScene.md > scene_precision:
+                similarSceneList.append(similarScene)
 
         return similarSceneList

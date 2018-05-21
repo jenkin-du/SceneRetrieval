@@ -94,7 +94,12 @@ if __name__ == '__main__':
                 pr = RelationPair(fp, lp)
 
                 # 方向角的差异度
-                da = np.abs(opr.getAzimuth() - pr.getAzimuth()) / 360
+                maxA = max(opr.getAzimuth(), pr.getAzimuth())
+                minA = min(opr.getAzimuth(), pr.getAzimuth())
+                if maxA - minA <= 180:
+                    da = (maxA - minA) / 360
+                else:
+                    da = (360 - maxA + minA) / 360
                 # 重心距离的差异
                 # 考虑缩放相似性
                 fs = scaleListF[i]
@@ -132,7 +137,7 @@ if __name__ == '__main__':
                 if ds != 0 and dv != 0:
                     md = (1 / ds * (1 - dv) + 1 / dv * (1 - ds)) / (1 / dv + 1 / ds)
 
-                if md > scene_precision:
+                if md > space_precision:
                     pr.md = md
 
                     # 组成关联对
@@ -157,6 +162,10 @@ if __name__ == '__main__':
 
                     # 加入关联对列表
                     incidentPairList.append(incidentPair)
+
+    fp = open(tempPath + "pair", 'w')
+    json.dump(incidentPairList, fp, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    fp.close()
 
     # 组成关联图
     graph = Graph(incidentPairList, len(scenePolygons))
